@@ -365,7 +365,7 @@ notes.oninput=renderRequest;['wristSize','fitPreference','clientName','clientPro
 document.querySelector('#cancelModel').onclick=()=>document.querySelector('#conflictDialog').close();document.querySelector('#keepModel').onclick=()=>{cfg.model=pendingModel;pendingModel=null;document.querySelector('#conflictDialog').close();renderAll()};document.querySelector('#adaptModel').onclick=()=>{cfg.model=pendingModel;pendingModel=null;normalizeSelections();document.querySelector('#conflictDialog').close();renderAll()};
 async function copyRequest(){try{await navigator.clipboard.writeText(request.value)}catch{request.select();document.execCommand('copy')}status.textContent='Solicitud copiada.'}$('#copy').onclick=copyRequest;$('#summaryCopy').onclick=copyRequest;
 $('#whatsappRequest').addEventListener('click',()=>{status.textContent='Abriendo WhatsApp. El mensaje no se envía hasta que pulses Enviar dentro del chat.';});
-$('#emailRequest').addEventListener('click',()=>{status.textContent='Abriendo tu aplicación de correo. El mensaje no se envía hasta que confirmes el envío.';});$('#downloadRequest').onclick=()=>{const blob=new Blob([request.value],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=configCode()+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);status.textContent='Solicitud descargada.'};$('.menu').onclick=()=>document.querySelector('.nav').classList.toggle('open');renderAll();
+$('#emailRequest').addEventListener('click',()=>{status.textContent='Abriendo tu aplicación de correo. El mensaje no se envía hasta que confirmes el envío.';});$('.menu').onclick=()=>document.querySelector('.nav').classList.toggle('open');renderAll();
 
 </script>
 </body></html>
