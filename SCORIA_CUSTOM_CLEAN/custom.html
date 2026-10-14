@@ -108,8 +108,7 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 </div>
 <div class="stage" id="stage"></div>
 <div class="controls">
-<button class="btn" id="backBtn" type="button">Anterior</button>
-<button class="btn primary" id="nextBtn" type="button">Continuar</button>
+<button class="btn" id="backBtn" type="button">Atrás</button>
 </div>
 </section>
 </main>
@@ -171,7 +170,7 @@ const state={
 let step=0;
 
 const steps=['Arquitectura','Caja','Bisel','Esfera','GMT','Agujas','Brazalete','Resumen'];
-const stage=document.querySelector('#stage'),progress=document.querySelector('#progress'),backBtn=document.querySelector('#backBtn'),nextBtn=document.querySelector('#nextBtn');
+const stage=document.querySelector('#stage'),progress=document.querySelector('#progress'),backBtn=document.querySelector('#backBtn');
 
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function optionCard(value,label,sub,active,extra=''){
@@ -212,7 +211,13 @@ function setProgress(){
  document.querySelector('#stepTitle').textContent=steps[step];
  progress.innerHTML=steps.map((_,i)=>`<span class="${i<step?'done':i===step?'active':''}"></span>`).join('');
  backBtn.disabled=step===0;
- nextBtn.textContent=step===7?'Volver a empezar':'Continuar';
+}
+
+function advanceAfterChoice(){
+ if(!readyForNext()){render();return;}
+ if(step<7)step++;
+ render();
+ window.scrollTo({top:document.querySelector('#wizard').offsetTop-70,behavior:'smooth'});
 }
 
 function renderArchitecture(){
@@ -222,7 +227,7 @@ function renderArchitecture(){
  models.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;render();};
+   b.onclick=()=>{state.architecture=id;advanceAfterChoice();};
    root.appendChild(b);
  });
 }
@@ -333,7 +338,7 @@ function renderSummary(){
 }
 
 function bindChoices(fn){
- stage.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{fn(b.dataset.value);render();});
+ stage.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{fn(b.dataset.value);advanceAfterChoice();});
 }
 
 function readyForNext(){
@@ -361,16 +366,9 @@ function render(){
  else if(step===5)renderHands();
  else if(step===6)renderBracelet();
  else renderSummary();
- nextBtn.disabled=!readyForNext()&&step<7;
 }
 
 backBtn.onclick=()=>{if(step>0){step--;render();}};
-nextBtn.onclick=()=>{
- if(step===7){step=0;Object.keys(state).forEach(k=>state[k]=k==='handsType'?'Mercedes':null);render();return;}
- if(!readyForNext())return;
- step++;render();
- window.scrollTo({top:document.querySelector('#wizard').offsetTop-70,behavior:'smooth'});
-};
 render();
 </script>
 </body></html>
