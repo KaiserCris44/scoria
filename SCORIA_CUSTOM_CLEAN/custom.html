@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SCORIA Custom — Personaliza tu reloj</title>
+<meta name="description" content="SCORIA Custom. Elige una arquitectura y configura tu reloj paso a paso. Nacida en el Mediterráneo.">
+<style>
+:root{--bg:#090a0b;--panel:#101114;--panel2:#141518;--line:#2a2b2f;--text:#f0ece6;--muted:#a8a098;--gold:#b99569;--gold2:#d6b486;--ok:#d8c4a7}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:inherit;text-decoration:none} button{font:inherit}
+header{position:sticky;top:0;z-index:20;background:rgba(9,10,11,.96);backdrop-filter:blur(10px);border-bottom:1px solid #202125}
+.header-inner{max-width:1460px;margin:auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;gap:12px;align-items:center} .brand-mark{width:40px;height:40px;border:1px solid #5d4e3e;border-radius:10px;display:grid;place-items:center;color:var(--gold);font-family:Georgia,serif;font-weight:700}
+.brand strong{display:block;letter-spacing:.28em;font-size:14px} .brand small{display:block;color:#8d857d;font:italic 11px Georgia,serif;margin-top:2px}
+nav{display:flex;gap:30px;align-items:center;color:#c8c1b9;font-size:14px} nav a:hover{color:white}
+.nav-cta{padding:11px 18px;border:1px solid #765f45;border-radius:999px;color:#f3eadf}
+main{max-width:1460px;margin:auto;padding:54px 28px 90px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:end;margin-bottom:38px}
+.kicker{color:var(--gold);letter-spacing:.22em;font-size:11px} h1{font:400 clamp(44px,6vw,82px)/.95 Georgia,serif;margin:15px 0 0}
+.hero p{color:#b9b0a6;line-height:1.7;max-width:600px;margin:0}
+.wizard{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,#111215,#0e0f11);overflow:hidden}
+.progress-wrap{padding:22px 28px;border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:center}
+.progress-copy{min-width:190px} .progress-copy small{display:block;color:#77716a;letter-spacing:.13em;font-size:10px} .progress-copy b{font-size:14px}
+.progress{flex:1;display:grid;grid-template-columns:repeat(8,1fr);gap:6px} .progress span{height:4px;border-radius:99px;background:#303136} .progress span.done,.progress span.active{background:var(--gold)}
+.stage{padding:30px} .stage-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:22px}
+.stage h2{font:400 34px Georgia,serif;margin:0} .stage-head p{max-width:650px;color:#a9a198;line-height:1.6;margin:8px 0 0}
+.arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.arch-card{position:relative;text-align:left;border:1px solid #2f3034;border-radius:20px;background:#111214;padding:0;overflow:hidden;color:inherit;cursor:pointer;transition:.18s}
+.arch-card:hover{transform:translateY(-2px);border-color:#695844} .arch-card.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(185,149,105,.25)}
+.arch-card img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#090a0b;display:block} .arch-copy{padding:16px} .arch-copy strong{display:block;font:400 20px Georgia,serif} .arch-copy small{display:block;color:#8f8880;margin-top:5px}
+.selected-chip{position:absolute;top:12px;right:12px;padding:6px 9px;border-radius:999px;background:#241e18;border:1px solid #765f45;color:#d9c2a4;font-size:10px;letter-spacing:.12em;opacity:0} .arch-card.active .selected-chip{opacity:1}
+.choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px} .choice-grid.two{grid-template-columns:repeat(2,1fr)} .choice-grid.five{grid-template-columns:repeat(5,1fr)}
+.choice{min-height:116px;padding:18px;text-align:left;border:1px solid #33343a;border-radius:18px;background:#121316;color:inherit;cursor:pointer;transition:.16s}
+.choice:hover{border-color:#6a5743} .choice.active{border-color:var(--gold);background:linear-gradient(180deg,rgba(185,149,105,.10),#121316)}
+.choice b{display:block;font-size:16px} .choice small{display:block;color:#928a82;margin-top:8px;line-height:1.45} .swatch{width:18px;height:18px;border-radius:50%;display:inline-block;vertical-align:-4px;margin-right:8px;border:1px solid rgba(255,255,255,.3)}
+.group-title{margin:0 0 12px;color:#c8b08f;font-size:11px;letter-spacing:.17em;text-transform:uppercase}
+.subgroup{margin-top:26px} .note{margin-top:16px;padding:14px 16px;border-left:2px solid var(--gold);background:#12100e;color:#c5b8a9;line-height:1.55;font-size:13px}
+.controls{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding:22px 30px}
+.btn{border:1px solid #3b3c41;background:#131418;color:white;padding:13px 22px;border-radius:999px;cursor:pointer} .btn.primary{background:#efeae3;color:#171717;border-color:#efeae3;font-weight:650} .btn:disabled{opacity:.35;cursor:not-allowed}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:14px} .summary-item{border:1px solid #2d2e32;border-radius:16px;padding:16px;background:#111214} .summary-item small{display:block;color:#817a73;text-transform:uppercase;letter-spacing:.12em;font-size:9px} .summary-item b{display:block;margin-top:7px;font-size:15px}
+.contact-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px} .contact-actions a{text-align:center;padding:14px 18px;border-radius:999px;border:1px solid #765f45} .contact-actions a:first-child{background:#efeae3;color:#151515;border-color:#efeae3;font-weight:650}
+.arch-warning{padding:18px;border:1px solid #47392e;border-radius:16px;background:#15110e;color:#d4c1aa}
+.hidden{display:none!important}
+@media(max-width:980px){.hero{grid-template-columns:1fr}.arch-grid{grid-template-columns:repeat(2,1fr)}.choice-grid.five{grid-template-columns:repeat(3,1fr)}nav a:not(.nav-cta){display:none}}
+@media(max-width:640px){main{padding:34px 14px 70px}.header-inner{padding:12px 14px}.arch-grid,.choice-grid,.choice-grid.two,.choice-grid.five,.summary,.contact-actions{grid-template-columns:1fr}.stage{padding:20px}.progress-copy{min-width:130px}.progress{gap:3px}}
+
+.visual-board{margin:4px 0 24px;border:1px solid #2d2e32;border-radius:24px;overflow:hidden;background:linear-gradient(180deg,#0e1116,#0a0b0d)}
+.visual-board img{display:block;width:100%;height:auto;background:transparent}
+.visual-caption{padding:12px 16px;border-top:1px solid #26272c;color:#8f8880;font-size:13px;line-height:1.5}
+.big-swatch{width:26px;height:26px;border-radius:50%;display:inline-block;vertical-align:-7px;margin-right:10px;border:1px solid rgba(255,255,255,.35)}
+.dual-swatches{display:inline-flex;gap:8px;vertical-align:-7px;margin-right:10px}.dual-swatches span{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.35);display:inline-block}
+.choice .stacked{display:flex;align-items:center;gap:10px;min-height:28px;margin-bottom:8px}
+
+
+.visual-board.compact{max-width:1080px;margin:6px auto 22px}
+.visual-board.compact img{width:100%;height:auto;max-height:none;object-fit:contain;background:transparent}
+.choice.media-choice{padding:12px;min-height:0;text-align:center;overflow:hidden}
+.choice.media-choice .choice-media{height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.choice.media-choice .choice-media img{max-width:100%;max-height:118px;object-fit:contain;display:block}
+.choice.media-choice b{font-size:15px}
+.choice.media-choice small{margin-top:4px}
+.choice.media-choice.active{box-shadow:0 0 0 2px rgba(185,149,105,.25) inset}
+.choice-grid.bezel-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.choice-grid.dial-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.choice-grid.hands-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.choice-grid.bracelet-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:18px}
+@media(max-width:980px){.choice-grid.bezel-grid,.choice-grid.hands-grid{grid-template-columns:repeat(2,1fr)}.choice-grid.bracelet-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.visual-board.compact{max-width:100%}.choice-grid.bezel-grid,.choice-grid.dial-grid,.choice-grid.hands-grid,.choice-grid.bracelet-grid{grid-template-columns:1fr}}
+
+
+.case-board{max-width:1180px;background:linear-gradient(180deg,#0d1116,#090a0b)}
+.case-board img{max-height:none;object-fit:contain;padding:0 24px}
+.hands-board{max-width:1120px;background:linear-gradient(180deg,#0d1116,#090a0b)}
+.hands-board img{max-height:420px;object-fit:contain;padding:16px 24px}
+.bracelets-board{max-width:1240px;background:linear-gradient(180deg,#0d1116,#090a0b)}
+.bracelets-board img{max-height:none;object-fit:contain;padding:0 24px}
+.choice-grid.hands-grid{gap:18px}
+.hands-grid .choice.media-choice{padding:16px;min-height:260px}
+.hands-grid .choice.media-choice .choice-media{height:185px;margin-bottom:12px}
+.hands-grid .choice.media-choice .choice-media img{width:100%;height:100%;max-width:100%;max-height:185px;object-fit:contain;transform:scale(1.12)}
+.hands-grid .choice.media-choice b{font-size:17px}
+.bracelet-grid .choice.media-choice{padding:16px;min-height:320px;text-align:center}
+.bracelet-grid .choice.media-choice .choice-media{height:260px;margin-bottom:12px;display:flex;align-items:center;justify-content:center}
+.bracelet-grid .choice.media-choice .choice-media img{width:100%;height:100%;max-width:100%;max-height:260px;object-fit:contain;object-position:center center;display:block;margin:0 auto}
+.bracelet-grid .choice.media-choice b{font-size:17px}
+@media(max-width:980px){.hands-grid .choice.media-choice{min-height:230px}.hands-grid .choice.media-choice .choice-media{height:160px}.bracelet-grid .choice.media-choice{min-height:280px}.bracelet-grid .choice.media-choice .choice-media{height:240px}}
+@media(max-width:640px){.hands-grid .choice.media-choice{min-height:245px}.hands-grid .choice.media-choice .choice-media{height:175px}.hands-grid .choice.media-choice .choice-media img{max-height:175px}.bracelet-grid .choice.media-choice{min-height:300px}.bracelet-grid .choice.media-choice .choice-media{height:220px}.bracelet-grid .choice.media-choice .choice-media img{max-height:240px}}
+
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+<a class="brand" href="index.html"><span class="brand-mark">S</span><span><strong>SCORIA</strong><small>Nacida en el Mediterráneo.</small></span></a>
+<nav><a href="index.html#collection">Collection</a><a href="selected.html">Selected</a><a href="index.html#marca">Sobre nosotros</a><a class="nav-cta" href="custom.html">Personaliza tu reloj</a></nav>
+</div></header>
+
+<main>
+<section class="hero">
+<div><span class="kicker">SCORIA CUSTOM</span><h1>Hazlo tuyo.</h1></div>
+<p>Una decisión cada vez. Primero eliges la arquitectura que más te atrae; después SCORIA te guía únicamente por las opciones que tienen sentido para ese reloj.</p>
+</section>
+
+<section class="wizard" id="wizard">
+<div class="progress-wrap">
+<div class="progress-copy"><small id="stepLabel">FASE 1 DE 8</small><b id="stepTitle">Arquitectura</b></div>
+<div class="progress" id="progress"></div>
+</div>
+<div class="stage" id="stage"></div>
+<div class="controls">
+<button class="btn" id="backBtn" type="button">Anterior</button>
+<button class="btn primary" id="nextBtn" type="button">Continuar</button>
+</div>
+</section>
+</main>
+
+<script>
+const models=[
+['gmt','SCORIA Meridian GMT','GMT · viajero y deportivo'],
+['oyster','SCORIA Essenza','Redondo · limpio y versátil'],
+['tank','SCORIA Quadrante','Rectangular · clásico y elegante'],
+['santos','SCORIA Fortezza','Cuadrado · arquitectónico'],
+['chrono','SCORIA Corsa','Cronógrafo · carácter deportivo'],
+['nautilus','SCORIA Litoral','Integrado · deportivo refinado'],
+['aquanaut','SCORIA Cala','Caucho · casual deportivo'],
+['datejust','SCORIA Signoria','Clásico · elegante y luminoso'],
+['submariner','SCORIA Abisso','Diver · robusto y funcional'],
+['yacht','SCORIA Levante','Náutico · deportivo elegante'],
+['royaloak','SCORIA Mito','Octogonal · integrado'],
+['landdweller','SCORIA Terranova','Integrado · contemporáneo'],
+['tonneau','SCORIA Tonneau','Tonneau · técnico y expresivo']
+];
+const images={"gmt":"assets/custom/media/asset-1eafa3b06bdb.webp","oyster":"assets/custom/media/asset-ddd359177008.webp","tank":"assets/custom/media/asset-63a96c33a949.webp","santos":"assets/custom/media/asset-60eec2398553.webp","chrono":"assets/custom/media/asset-9e036b4b3e17.webp","nautilus":"assets/custom/media/asset-02e0e8535883.webp","aquanaut":"assets/custom/media/asset-f3739f6086d1.webp","datejust":"assets/custom/media/asset-84100cbc4587.webp","submariner":"assets/custom/media/asset-debfffb45985.webp","yacht":"assets/custom/media/asset-cccf56a55bde.webp","royaloak":"assets/custom/media/asset-4b2a00c89bba.webp","landdweller":"assets/custom/media/asset-bb8dafbcef4f.webp"};
+
+const customUserVisuals={"bezels":"assets/custom/media/asset-8ed3ce275dd3.jpg","dials":"assets/custom/media/asset-2fd7136051a9.jpg","hands":"assets/custom/media/asset-2f3e94ee3591.jpg","bracelets":"assets/custom/media/asset-ee8e5af3e967.jpg"};
+customUserVisuals.cases='assets/custom/media/asset-2ce0c4a75954.jpg';
+customUserVisuals.hands='assets/custom/media/asset-2f3e94ee3591.jpg';
+const customThumbs={"Pepsi":"assets/custom/media/asset-297f03f8a80d.png","Coke":"assets/custom/media/asset-120af312c57f.png","Full Black":"assets/custom/media/asset-ce8c5a906a45.png","Root Beer":"assets/custom/media/asset-0cb1f8d16a72.png","Batman / Batgirl":"assets/custom/media/asset-e131cfbfd538.png","Bruce Wayne":"assets/custom/media/asset-d65871e1ebe7.png","Sprite":"assets/custom/media/asset-85f7de5d4583.png","Brown / Black":"assets/custom/media/asset-ccf7424a1881.png","Negra con fecha":"assets/custom/media/asset-a4090d485873.png","Verde con fecha":"assets/custom/media/asset-d12a7f1e9709.png","Negra sin fecha":"assets/custom/media/asset-c0dc4c84c700.png","Hands Plata":"assets/custom/media/asset-5687174c81be.png","Hands Oro":"assets/custom/media/asset-3efebd2a422d.png","Hands Oro rosa":"assets/custom/media/asset-3f1ce885995a.png","Hands Negro":"assets/custom/media/asset-9f18b8e23639.png","Oyster Plata":"assets/custom/media/asset-4039115fd964.png","Oyster Oro":"assets/custom/media/asset-09d9780b2552.png","Oyster Oro rosa":"assets/custom/media/asset-c6899451f573.png","Oyster Two-tone plata / oro":"assets/custom/media/asset-c32f500ef82e.png","Oyster Two-tone plata / oro rosa":"assets/custom/media/asset-152aaeb72608.png","Jubilee Plata":"assets/custom/media/asset-1b178564345f.png","Jubilee Oro":"assets/custom/media/asset-1ecf9623dca5.png","Jubilee Oro rosa":"assets/custom/media/asset-3ecd4942ad8f.png","Jubilee Two-tone plata / oro":"assets/custom/media/asset-a8ac295d00f1.png","Jubilee Two-tone plata / oro rosa":"assets/custom/media/asset-1bba62bc4428.png"};
+const phaseVisuals={"cases": "assets/custom/media/asset-afdf7efb793f.png", "bezels": "assets/custom/media/asset-2f01e6a6071d.png", "dials": "assets/custom/media/asset-5bf5633816aa.png", "hands": "assets/custom/media/asset-ebb08ddb30a1.png", "bracelets": "assets/custom/media/asset-7df3708d54e7.png"};
+const braceletThumbs={
+  'Oyster Plata': 'assets/custom/media/asset-95f0f46c3334.png',
+  'Oyster Oro': 'assets/custom/media/asset-5473d84343b8.png',
+  'Oyster Oro rosa': 'assets/custom/media/asset-a0fe3734879b.png',
+  'Oyster Plata / Oro': 'assets/custom/media/asset-1a0793f9e07f.png',
+  'Oyster Plata / Oro rosa': 'assets/custom/media/asset-f5bca4581db0.png',
+  'Jubilee Plata': 'assets/custom/media/asset-4656acbb8b4c.png',
+  'Jubilee Oro': 'assets/custom/media/asset-413c342b618c.png',
+  'Jubilee Oro rosa': 'assets/custom/media/asset-ed687553a828.png',
+  'Jubilee Plata / Oro': 'assets/custom/media/asset-1da3aaab3d48.png',
+  'Jubilee Plata / Oro rosa': 'assets/custom/media/asset-a604949d1736.png'
+};
+
+
+braceletThumbs['Oyster Two-tone plata / oro']=braceletThumbs['Oyster Plata / Oro'];
+braceletThumbs['Oyster Two-tone plata / oro rosa']=braceletThumbs['Oyster Plata / Oro rosa'];
+braceletThumbs['Jubilee Two-tone plata / oro']=braceletThumbs['Jubilee Plata / Oro'];
+braceletThumbs['Jubilee Two-tone plata / oro rosa']=braceletThumbs['Jubilee Plata / Oro rosa'];
+
+const state={
+ architecture:null,
+ caseColor:null,
+ bezel:null,
+ dial:null,
+ gmt:null,
+ gmtHand:null,
+ handsType:'Mercedes',
+ handsColor:null,
+ braceletType:null,
+ braceletColor:null
+};
+let step=0;
+
+const steps=['Arquitectura','Caja','Bisel','Esfera','GMT','Agujas','Brazalete','Resumen'];
+const stage=document.querySelector('#stage'),progress=document.querySelector('#progress'),backBtn=document.querySelector('#backBtn'),nextBtn=document.querySelector('#nextBtn');
+
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function optionCard(value,label,sub,active,extra=''){
+ return `<button type="button" class="choice ${active?'active':''}" data-value="${esc(value)}">${extra}<b>${label}</b>${sub?`<small>${sub}</small>`:''}</button>`
+}
+Object.assign(customThumbs,{'Hands Plata':'assets/custom/media/asset-2ca49c174cf8.png','Hands Oro':'assets/custom/media/asset-7676b492d6c9.png','Hands Oro rosa':'assets/custom/media/asset-2bbb0213bec1.png','Hands Negro':'assets/custom/media/asset-36c4d4ac7875.png'});
+
+Object.assign(customThumbs,{
+ 'Oyster Plata':'assets/custom/media/asset-95f0f46c3334.png',
+ 'Oyster Oro':'assets/custom/media/asset-5473d84343b8.png',
+ 'Oyster Oro rosa':'assets/custom/media/asset-a0fe3734879b.png',
+ 'Oyster Two-tone plata / oro':'assets/custom/media/asset-1a0793f9e07f.png',
+ 'Oyster Two-tone plata / oro rosa':'assets/custom/media/asset-f5bca4581db0.png',
+ 'Jubilee Plata':'assets/custom/media/asset-4656acbb8b4c.png',
+ 'Jubilee Oro':'assets/custom/media/asset-413c342b618c.png',
+ 'Jubilee Oro rosa':'assets/custom/media/asset-ed687553a828.png',
+ 'Jubilee Two-tone plata / oro':'assets/custom/media/asset-1da3aaab3d48.png',
+ 'Jubilee Two-tone plata / oro rosa':'assets/custom/media/asset-a604949d1736.png'
+});
+// BEZEL_THUMBS_INSERTED
+Object.assign(customThumbs,{
+ 'Pepsi':'assets/custom/media/asset-10b1ad02a041.png',
+ 'Coke':'assets/custom/media/asset-262c80915e49.png',
+ 'Full Black':'assets/custom/media/asset-f1811a586cfa.png',
+ 'Root Beer':'assets/custom/media/asset-47393b8b5f7a.png',
+ 'Batman / Batgirl':'assets/custom/media/asset-73dbd960e2ca.png',
+ 'Bruce Wayne':'assets/custom/media/asset-81fc83c3fd44.png',
+ 'Sprite':'assets/custom/media/asset-b3486b5f6ae7.png',
+ 'Brown / Black':'assets/custom/media/asset-b1c36eda6cab.png'
+});
+
+function mediaOption(value,label,sub,active,img,extra=''){
+ return `<button type="button" class="choice media-choice ${active?'active':''}" data-value="${esc(value)}"><span class="choice-media"><img src="${img}" alt="${esc(label)}"></span>${extra}<b>${label}</b>${sub?`<small>${sub}</small>`:''}</button>`
+}
+
+function setProgress(){
+ document.querySelector('#stepLabel').textContent=`FASE ${step+1} DE 8`;
+ document.querySelector('#stepTitle').textContent=steps[step];
+ progress.innerHTML=steps.map((_,i)=>`<span class="${i<step?'done':i===step?'active':''}"></span>`).join('');
+ backBtn.disabled=step===0;
+ nextBtn.textContent=step===7?'Volver a empezar':'Continuar';
+}
+
+function renderArchitecture(){
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige tu arquitectura</h2><p>Escoge la forma y el carácter del reloj. No tienes que decidir nada técnico todavía.</p></div></div>
+ <div class="arch-grid" id="archGrid"></div>`;
+ const root=document.querySelector('#archGrid');
+ models.forEach(([id,name,spec])=>{
+   const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
+   b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
+   b.onclick=()=>{state.architecture=id;render();};
+   root.appendChild(b);
+ });
+}
+
+function renderCase(){
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el color de la caja</h2><p>Para Meridian GMT hay tres acabados. La imagen superior te permite compararlos de un vistazo.</p></div></div>
+ <div class="visual-board compact case-board"><img src="${customUserVisuals.cases}" alt="Caja Meridian GMT en plata, oro y oro rosa"><div class="visual-caption">Plata, oro y oro rosa.</div></div>
+ <div class="choice-grid">
+ ${optionCard('Plata','Plata','Acabado acero',state.caseColor==='Plata','<span class="big-swatch" style="background:#c7c9ca"></span>')}
+ ${optionCard('Oro','Oro','Acabado dorado',state.caseColor==='Oro','<span class="big-swatch" style="background:#c9a34e"></span>')}
+ ${optionCard('Oro rosa','Oro rosa','Rose gold',state.caseColor==='Oro rosa','<span class="big-swatch" style="background:#b87a6a"></span>')}
+ </div>`;
+ bindChoices(v=>state.caseColor=v);
+}
+
+function renderBezel(){
+ const groups=[
+  ['ALUMINIO',[
+    ['Aluminum · Pepsi','Pepsi','Rojo / Azul',customThumbs['Pepsi']],
+    ['Aluminum · Coke','Coke','Negro / Rojo',customThumbs['Coke']],
+    ['Aluminum · Full Black','Full Black','Negro completo',customThumbs['Full Black']]
+  ]],
+  ['ROOT BEER',[
+    ['Root Beer · Brown / Black','Brown / Black','Marrón / Negro',customThumbs['Root Beer']]
+  ]],
+  ['CERACHROM',[
+    ['Cerachrom · Batman / Batgirl','Batman / Batgirl','Negro / Azul',customThumbs['Batman / Batgirl']],
+    ['Cerachrom · Bruce Wayne','Bruce Wayne','Negro / Gris',customThumbs['Bruce Wayne']],
+    ['Cerachrom · Sprite','Sprite','Negro / Verde',customThumbs['Sprite']],
+    ['Cerachrom · Brown / Black','Brown / Black','Marrón / Negro',customThumbs['Brown / Black']]
+  ]]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el bisel</h2><p>Pulsa directamente sobre el bisel que quieras. La imagen superior sirve como guía visual general.</p></div></div>
+ <div class="visual-board compact"><img src="${customUserVisuals.bezels}" alt="Tipos de biseles disponibles para SCORIA Meridian GMT"><div class="visual-caption">Aluminio, Root Beer y Cerachrom.</div></div>`+
+ groups.map(([title,opts])=>`<div class="subgroup"><p class="group-title">${title}</p><div class="choice-grid bezel-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.bezel===v,img)).join('')}</div></div>`).join('');
+ bindChoices(v=>state.bezel=v);
+}
+
+function renderDial(){
+ const opts=[
+  ['Negra con fecha','Negra con fecha','Ventana de fecha',customThumbs['Negra con fecha']],
+  ['Verde con fecha','Verde con fecha','Ventana de fecha',customThumbs['Verde con fecha']],
+  ['Negra sin fecha','Negra sin fecha','Sin ventana de fecha',customThumbs['Negra sin fecha']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la esfera</h2><p>Pulsa sobre la esfera que quieras montar en tu Meridian GMT.</p></div></div>
+ <div class="visual-board compact"><img src="${customUserVisuals.dials}" alt="Esferas disponibles para SCORIA Meridian GMT"><div class="visual-caption">Negra con fecha, verde con fecha y negra sin fecha.</div></div>
+ <div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.dial===v,img)).join('')}</div>`;
+ bindChoices(v=>state.dial=v);
+}
+
+function renderGmt(){
+ stage.innerHTML=`<div class="stage-head"><div><h2>¿Quieres función GMT?</h2><p>Esta decisión cambia el movimiento y el coste del reloj.</p></div></div>
+ <div class="choice-grid two">
+ ${optionCard('Con GMT','Con GMT','Movimiento NH34 o equivalente. Precio superior.',state.gmt==='Con GMT')}
+ ${optionCard('Sin GMT','Sin GMT','Más económico. No llevará aguja GMT.',state.gmt==='Sin GMT')}
+ </div>
+ ${state.gmt==='Con GMT'?`<div class="subgroup"><p class="group-title">COLOR DE AGUJA GMT</p><div class="choice-grid two">
+ ${optionCard('Azul','Azul','',state.gmtHand==='Azul','<span class="swatch" style="background:#1766d7"></span>')}
+ ${optionCard('Verde','Verde','',state.gmtHand==='Verde','<span class="swatch" style="background:#168854"></span>')}
+ </div><div class="note">La función GMT incrementará el precio porque requiere un movimiento GMT, como NH34 o equivalente.</div></div>`:''}`;
+ bindChoices(v=>{
+   if(v==='Con GMT'||v==='Sin GMT'){state.gmt=v;if(v==='Sin GMT')state.gmtHand=null;}
+   else state.gmtHand=v;
+ });
+}
+
+const customHandThumbs={
+  'Plata':'assets/custom/media/asset-857609cdd36a.png',
+  'Oro':'assets/custom/media/asset-f073e702fc12.png',
+  'Oro rosa':'assets/custom/media/asset-c08d5bf3d48e.png',
+  'Negro':'assets/custom/media/asset-a72cef277014.png'
+};
+
+function renderHands(){
+ const opts=[
+  ['Plata','Plata','Mercedes',customHandThumbs['Plata']],
+  ['Oro','Oro','Mercedes',customHandThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Mercedes',customHandThumbs['Oro rosa']],
+  ['Negro','Negro','Mercedes',customHandThumbs['Negro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el acabado de las agujas</h2><p>Para Meridian GMT el diseño es Mercedes. Pulsa directamente sobre el color que quieras.</p></div></div>
+ <div class="visual-board compact hands-board"><img src="${customUserVisuals.hands}" alt="Agujas Mercedes en plata, oro, oro rosa y negro"><div class="visual-caption">Solo agujas Mercedes: plata, oro, oro rosa y negro.</div></div>
+ <div class="choice-grid hands-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.handsColor===v,img)).join('')}</div>`;
+ bindChoices(v=>state.handsColor=v);
+}
+
+function renderBracelet(){
+ const colors=[['Plata','Plata'],['Oro','Oro'],['Oro rosa','Oro rosa'],['Two-tone plata / oro','Plata / Oro'],['Two-tone plata / oro rosa','Plata / Oro rosa']];
+ const block=(type)=>`<div class="subgroup"><p class="group-title">${type.toUpperCase()}</p><div class="choice-grid bracelet-grid">${colors.map(([v,l])=>mediaOption(`${type} · ${v}`,l,type,state.braceletType===type&&state.braceletColor===v,braceletThumbs[`${type} ${v}`])).join('')}</div></div>`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el brazalete</h2><p>Pulsa directamente sobre el brazalete y acabado que quieras.</p></div></div>
+ <div class="visual-board compact bracelets-board"><img src="${customUserVisuals.bracelets}" alt="Brazaletes Oyster y Jubilee disponibles"><div class="visual-caption">Oyster y Jubilee, con todos los acabados disponibles.</div></div>${block('Oyster')}${block('Jubilee')}`;
+ bindChoices(v=>{const [type,color]=v.split(' · ');state.braceletType=type;state.braceletColor=color;});
+}
+
+function renderSummary(){
+ const arch=models.find(x=>x[0]===state.architecture);
+ const rows=[
+  ['Arquitectura',arch?.[1]||'—'],['Caja',state.caseColor||'—'],['Bisel',state.bezel||'—'],['Esfera',state.dial||'—'],
+  ['GMT',state.gmt||'—'],['Aguja GMT',state.gmt==='Con GMT'?(state.gmtHand||'—'):'No aplica'],['Agujas',`Mercedes · ${state.handsColor||'—'}`],
+  ['Brazalete',state.braceletType?`${state.braceletType} · ${state.braceletColor}`:'—']
+ ];
+ const text=`SOLICITUD SCORIA CUSTOM\nModelo: ${arch?.[1]||''}\nCaja: ${state.caseColor||''}\nBisel: ${state.bezel||''}\nEsfera: ${state.dial||''}\nGMT: ${state.gmt||''}${state.gmt==='Con GMT'?`\nAguja GMT: ${state.gmtHand||''}`:''}\nAgujas: Mercedes · ${state.handsColor||''}\nBrazalete: ${state.braceletType||''} · ${state.braceletColor||''}`;
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un reloj en SCORIA Custom y me gustaría consultarlo.\n\n'+text)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Meridian GMT')}&body=${encodeURIComponent('Hola SCORIA,\n\n'+text)}`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Meridian GMT</h2><p>Este es el resumen de tus elecciones. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
+ <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
+ <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
+}
+
+function bindChoices(fn){
+ stage.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{fn(b.dataset.value);render();});
+}
+
+function readyForNext(){
+ if(step===0)return !!state.architecture;
+ if(state.architecture!=='gmt')return false;
+ if(step===1)return !!state.caseColor;
+ if(step===2)return !!state.bezel;
+ if(step===3)return !!state.dial;
+ if(step===4)return state.gmt==='Sin GMT'||(state.gmt==='Con GMT'&&!!state.gmtHand);
+ if(step===5)return !!state.handsColor;
+ if(step===6)return !!state.braceletType&&!!state.braceletColor;
+ return true;
+}
+
+function render(){
+ setProgress();
+ if(step===0)renderArchitecture();
+ else if(state.architecture!=='gmt'){
+   const arch=models.find(x=>x[0]===state.architecture);
+   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después de Meridian GMT.</p></div></div><div class="arch-warning">Ahora estamos implementando Meridian GMT paso a paso. Puedes volver y escoger Meridian para probar el flujo completo.</div>`;
+ } else if(step===1)renderCase();
+ else if(step===2)renderBezel();
+ else if(step===3)renderDial();
+ else if(step===4)renderGmt();
+ else if(step===5)renderHands();
+ else if(step===6)renderBracelet();
+ else renderSummary();
+ nextBtn.disabled=!readyForNext()&&step<7;
+}
+
+backBtn.onclick=()=>{if(step>0){step--;render();}};
+nextBtn.onclick=()=>{
+ if(step===7){step=0;Object.keys(state).forEach(k=>state[k]=k==='handsType'?'Mercedes':null);render();return;}
+ if(!readyForNext())return;
+ step++;render();
+ window.scrollTo({top:document.querySelector('#wizard').offsetTop-70,behavior:'smooth'});
+};
+render();
+</script>
+</body></html>
