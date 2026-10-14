@@ -1,5 +1,12 @@
-SCORIA Custom assets
+SCORIA Custom — estructura ordenada
 
-Las imágenes se han sacado de custom.html para evitar el límite de tamaño.
-custom.html usa rutas relativas assets/custom/media/... y debe mantenerse junto a esta carpeta assets.
-manifest.json relaciona los archivos con las claves del configurador cuando ha sido posible detectarlas.
+architectures/  Imágenes de selección de arquitectura.
+gmt/            Todo lo correspondiente a Meridian GMT.
+  overview/     Láminas comparativas de fase.
+  bezels/       Miniaturas individuales de bisel.
+  dials/        Miniaturas individuales de esfera.
+  hands/        Miniaturas individuales de agujas.
+  bracelets/    Miniaturas individuales Oyster/Jubilee.
+
+tank/, santos/, daydate/ están preparados para los siguientes configuradores.
+No usar de nuevo una carpeta media/ genérica.
