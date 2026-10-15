@@ -140,6 +140,24 @@ const quadranteCaseThumbs={
   'Oro rosa con diamantes':'assets/custom/quadrante/cases/quadrante-case-rose-gold-diamond.png'
 };
 
+const quadranteDialThumbs={
+  'Azul · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-blue-date-3.png',
+  'Azul · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-blue-date-6.png',
+  'Azul · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-blue-no-date.png',
+  'Verde · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-green-date-3.png',
+  'Verde · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-green-date-6.png',
+  'Verde · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-green-no-date.png',
+  'Blanca · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-white-date-3.png',
+  'Blanca · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-white-date-6.png',
+  'Blanca · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-white-no-date.png',
+  'Negra · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-black-date-3.png',
+  'Negra · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-black-date-6.png',
+  'Negra · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-black-no-date.png',
+  'Marrón · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-brown-date-3.png',
+  'Marrón · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-brown-date-6.png',
+  'Marrón · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-brown-no-date.png'
+};
+
 const customUserVisuals={"bezels":"assets/custom/gmt/overview/bezels.jpg","dials":"assets/custom/gmt/overview/dials.jpg","hands":"assets/custom/gmt/overview/hands.jpg","bracelets":"assets/custom/gmt/overview/bracelets.jpg"};
 customUserVisuals.cases='assets/custom/gmt/overview/cases.jpg';
 const customThumbs={"Pepsi":"assets/custom/gmt/bezels/pepsi.png","Coke":"assets/custom/gmt/bezels/coke.png","Full Black":"assets/custom/gmt/bezels/full-black.png","Root Beer":"assets/custom/gmt/bezels/root-beer.png","Batman / Batgirl":"assets/custom/gmt/bezels/batman-batgirl.png","Bruce Wayne":"assets/custom/gmt/bezels/bruce-wayne.png","Sprite":"assets/custom/gmt/bezels/sprite.png","Brown / Black":"assets/custom/gmt/bezels/brown-black.png","Negra con fecha":"assets/custom/gmt/dials/black-date.png","Verde con fecha":"assets/custom/gmt/dials/green-date.png","Negra sin fecha":"assets/custom/gmt/dials/black-no-date.png"};
@@ -222,7 +240,7 @@ function renderArchitecture(){
  models.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank')state.quadranteCase=null;advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
 }
@@ -250,6 +268,39 @@ function renderQuadranteCase(){
  stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Quadrante</h2><p>Seis acabados disponibles. Pulsa directamente sobre la caja que quieras.</p></div></div>
  <div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteCase===v,img)).join('')}</div>`;
  bindChoices(v=>state.quadranteCase=v);
+}
+
+function renderQuadranteDial(){
+ const groups=[
+  ['AZUL',[
+    ['Azul · Fecha a las 3','Azul · Fecha 3','Números blancos · fecha a las 3',quadranteDialThumbs['Azul · Fecha a las 3']],
+    ['Azul · Fecha a las 6','Azul · Fecha 6','Números blancos · fecha a las 6',quadranteDialThumbs['Azul · Fecha a las 6']],
+    ['Azul · Sin fecha','Azul · Sin fecha','Números blancos · sin fecha',quadranteDialThumbs['Azul · Sin fecha']]
+  ]],
+  ['VERDE',[
+    ['Verde · Fecha a las 3','Verde · Fecha 3','Números blancos · fecha a las 3',quadranteDialThumbs['Verde · Fecha a las 3']],
+    ['Verde · Fecha a las 6','Verde · Fecha 6','Números blancos · fecha a las 6',quadranteDialThumbs['Verde · Fecha a las 6']],
+    ['Verde · Sin fecha','Verde · Sin fecha','Números blancos · sin fecha',quadranteDialThumbs['Verde · Sin fecha']]
+  ]],
+  ['BLANCA',[
+    ['Blanca · Fecha a las 3','Blanca · Fecha 3','Números negros · fecha a las 3',quadranteDialThumbs['Blanca · Fecha a las 3']],
+    ['Blanca · Fecha a las 6','Blanca · Fecha 6','Números negros · fecha a las 6',quadranteDialThumbs['Blanca · Fecha a las 6']],
+    ['Blanca · Sin fecha','Blanca · Sin fecha','Números negros · sin fecha',quadranteDialThumbs['Blanca · Sin fecha']]
+  ]],
+  ['NEGRA',[
+    ['Negra · Fecha a las 3','Negra · Fecha 3','Números blancos · fecha a las 3',quadranteDialThumbs['Negra · Fecha a las 3']],
+    ['Negra · Fecha a las 6','Negra · Fecha 6','Números blancos · fecha a las 6',quadranteDialThumbs['Negra · Fecha a las 6']],
+    ['Negra · Sin fecha','Negra · Sin fecha','Números blancos · sin fecha',quadranteDialThumbs['Negra · Sin fecha']]
+  ]],
+  ['MARRÓN',[
+    ['Marrón · Fecha a las 3','Marrón · Fecha 3','Números blancos · fecha a las 3',quadranteDialThumbs['Marrón · Fecha a las 3']],
+    ['Marrón · Fecha a las 6','Marrón · Fecha 6','Números blancos · fecha a las 6',quadranteDialThumbs['Marrón · Fecha a las 6']],
+    ['Marrón · Sin fecha','Marrón · Sin fecha','Números blancos · sin fecha',quadranteDialThumbs['Marrón · Sin fecha']]
+  ]]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la esfera de tu SCORIA Quadrante</h2><p>Ya están cargadas todas las variantes actuales: azul, verde, blanca, negra y marrón. Pulsa directamente sobre la esfera que quieras.</p></div></div>`+
+ groups.map(([title,opts])=>`<div class="subgroup"><p class="group-title">${title}</p><div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteDial===v,img)).join('')}</div></div>`).join('');
+ bindChoices(v=>state.quadranteDial=v);
 }
 
 function renderQuadrantePending(title,text){
@@ -358,6 +409,7 @@ function readyForNext(){
  if(step===0)return !!state.architecture;
  if(state.architecture==='tank'){
    if(step===1)return !!state.quadranteCase;
+   if(step===2)return !!state.quadranteDial;
    return false;
  }
  if(state.architecture!=='gmt')return false;
@@ -375,7 +427,7 @@ function render(){
  if(step===0)renderArchitecture();
  else if(state.architecture==='tank'){
    if(step===1)renderQuadranteCase();
-   else if(step===2)renderQuadrantePending('Elige la esfera','Aquí irán los colores y las opciones de fecha a las 3, a las 6 o sin fecha.');
+   else if(step===2)renderQuadranteDial();
    else if(step===3)renderQuadrantePending('Elige las agujas','Aquí irán los cinco acabados de agujas del Quadrante.');
    else if(step===4)renderQuadrantePending('Elige correa o brazalete','Aquí irán las correas de cuero y el brazalete de acero compatible.');
    else renderQuadrantePending('Tu SCORIA Quadrante','El resumen se activará cuando estén cargadas las cuatro fases.');
