@@ -166,6 +166,29 @@ const quadranteHandsThumbs={
   'Negro':'assets/custom/quadrante/hands/quadrante-hands-black.png'
 };
 
+
+const quadranteStrapThumbs={
+  'Negro · Plata':'assets/custom/quadrante/straps/quadrante-strap-black-silver.png',
+  'Negro · Oro':'assets/custom/quadrante/straps/quadrante-strap-black-gold.png',
+  'Negro · Oro rosa':'assets/custom/quadrante/straps/quadrante-strap-black-rose-gold.png',
+  'Rojo oscuro · Plata':'assets/custom/quadrante/straps/quadrante-strap-dark-red-silver.png',
+  'Rojo oscuro · Oro':'assets/custom/quadrante/straps/quadrante-strap-dark-red-gold.png',
+  'Rojo oscuro · Oro rosa':'assets/custom/quadrante/straps/quadrante-strap-dark-red-rose-gold.png',
+  'Marrón · Plata':'assets/custom/quadrante/straps/quadrante-strap-brown-silver.png',
+  'Marrón · Oro':'assets/custom/quadrante/straps/quadrante-strap-brown-gold.png',
+  'Marrón · Oro rosa':'assets/custom/quadrante/straps/quadrante-strap-brown-rose-gold.png',
+  'Verde · Plata':'assets/custom/quadrante/straps/quadrante-strap-green-silver.png',
+  'Verde · Oro':'assets/custom/quadrante/straps/quadrante-strap-green-gold.png',
+  'Verde · Oro rosa':'assets/custom/quadrante/straps/quadrante-strap-green-rose-gold.png',
+  'Azul marino · Plata':'assets/custom/quadrante/straps/quadrante-strap-navy-silver.png',
+  'Azul marino · Oro':'assets/custom/quadrante/straps/quadrante-strap-navy-gold.png',
+  'Azul marino · Oro rosa':'assets/custom/quadrante/straps/quadrante-strap-navy-rose-gold.png'
+};
+
+const quadranteBraceletThumbs={
+  'Brazalete · Plata':'assets/custom/quadrante/bracelets/quadrante-bracelet-silver.png'
+};
+
 const customUserVisuals={"bezels":"assets/custom/gmt/overview/bezels.jpg","dials":"assets/custom/gmt/overview/dials.jpg","hands":"assets/custom/gmt/overview/hands.jpg","bracelets":"assets/custom/gmt/overview/bracelets.jpg"};
 customUserVisuals.cases='assets/custom/gmt/overview/cases.jpg';
 const customThumbs={"Pepsi":"assets/custom/gmt/bezels/pepsi.png","Coke":"assets/custom/gmt/bezels/coke.png","Full Black":"assets/custom/gmt/bezels/full-black.png","Root Beer":"assets/custom/gmt/bezels/root-beer.png","Batman / Batgirl":"assets/custom/gmt/bezels/batman-batgirl.png","Bruce Wayne":"assets/custom/gmt/bezels/bruce-wayne.png","Sprite":"assets/custom/gmt/bezels/sprite.png","Brown / Black":"assets/custom/gmt/bezels/brown-black.png","Negra con fecha":"assets/custom/gmt/dials/black-date.png","Verde con fecha":"assets/custom/gmt/dials/green-date.png","Negra sin fecha":"assets/custom/gmt/dials/black-no-date.png"};
@@ -275,7 +298,7 @@ function renderQuadranteCase(){
  ];
  stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Quadrante</h2><p>Seis acabados disponibles. Pulsa directamente sobre la caja que quieras.</p></div></div>
  <div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteCase===v,img)).join('')}</div>`;
- bindChoices(v=>state.quadranteCase=v);
+ bindChoices(v=>{state.quadranteCase=v;state.quadranteStrap=null;});
 }
 
 function renderQuadranteDial(){
@@ -322,6 +345,55 @@ function renderQuadranteHands(){
  stage.innerHTML=`<div class="stage-head"><div><h2>Elige las agujas de tu SCORIA Quadrante</h2><p>Cinco acabados disponibles. Todas mantienen el mismo diseño tipo espada y la misma posición visual.</p></div></div>
  <div class="choice-grid hands-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteHands===v,img)).join('')}</div>`;
  bindChoices(v=>state.quadranteHands=v);
+}
+
+
+
+function renderQuadranteStrap(){
+ const colors=[
+  ['Negro','Negro'],
+  ['Rojo oscuro','Rojo oscuro'],
+  ['Marrón','Marrón'],
+  ['Verde','Verde'],
+  ['Azul marino','Azul marino']
+ ];
+ const silverCase=state.quadranteCase==='Plata'||state.quadranteCase==='Plata con diamantes';
+ const goldCase=state.quadranteCase==='Oro'||state.quadranteCase==='Oro con diamantes';
+ const roseCase=state.quadranteCase==='Oro rosa'||state.quadranteCase==='Oro rosa con diamantes';
+ const finish=silverCase?'Plata':goldCase?'Oro':roseCase?'Oro rosa':null;
+ const leatherCards=finish?colors.map(([value,label])=>{
+   const key=`${value} · ${finish}`;
+   return mediaOption(key,label,`Cuero liso · herraje ${finish.toLowerCase()}`,state.quadranteStrap===key,quadranteStrapThumbs[key]);
+ }).join(''):'';
+ const braceletKey='Brazalete · Plata';
+ const braceletCard=mediaOption(braceletKey,'Plata','Brazalete de acero',state.quadranteStrap===braceletKey,quadranteBraceletThumbs[braceletKey]);
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la correa o el brazalete de tu SCORIA Quadrante</h2><p>Ya están disponibles las tres familias de herrajes para correas de cuero liso (plata, oro y oro rosa), además del brazalete metálico en plata.</p></div></div>
+ ${finish?`<div class="subgroup"><p class="group-title">CORREAS DE CUERO · HERRAJE ${finish.toUpperCase()}</p><div class="choice-grid bracelet-grid">${leatherCards}</div></div>`:''}
+ <div class="subgroup"><p class="group-title">BRAZALETE METÁLICO</p><div class="choice-grid bracelet-grid">${braceletCard}</div></div>
+ <div class="note">Las correas mantienen cuero liso y cambian el herraje según el acabado de la caja. El brazalete disponible por ahora es solo en plata.</div>`;
+ bindChoices(v=>state.quadranteStrap=v);
+}
+
+function renderQuadranteSummary(){
+ const arch=models.find(x=>x[0]===state.architecture);
+ const rows=[
+  ['Arquitectura',arch?.[1]||'—'],
+  ['Caja',state.quadranteCase||'—'],
+  ['Esfera',state.quadranteDial||'—'],
+  ['Agujas',`Tipo espada · ${state.quadranteHands||'—'}`],
+  ['Correa / brazalete',state.quadranteStrap||'—']
+ ];
+ const text=`SOLICITUD SCORIA CUSTOM
+Modelo: ${arch?.[1]||''}
+Caja: ${state.quadranteCase||''}
+Esfera: ${state.quadranteDial||''}
+Agujas: Tipo espada · ${state.quadranteHands||''}
+Correa / brazalete: ${state.quadranteStrap||''}`;
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un SCORIA Quadrante en SCORIA Custom y me gustaría consultarlo.\n\n'+text)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Quadrante')}&body=${encodeURIComponent('Hola SCORIA,\n\n'+text)}`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Quadrante</h2><p>Este es el resumen actual de tus elecciones. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
+ <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
+ <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
 }
 
 function renderQuadrantePending(title,text){
@@ -432,7 +504,8 @@ function readyForNext(){
    if(step===1)return !!state.quadranteCase;
    if(step===2)return !!state.quadranteDial;
    if(step===3)return !!state.quadranteHands;
-   return false;
+   if(step===4)return !!state.quadranteStrap;
+   return true;
  }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
@@ -451,8 +524,8 @@ function render(){
    if(step===1)renderQuadranteCase();
    else if(step===2)renderQuadranteDial();
    else if(step===3)renderQuadranteHands();
-   else if(step===4)renderQuadrantePending('Elige correa o brazalete','Aquí irán las correas de cuero y el brazalete de acero compatible.');
-   else renderQuadrantePending('Tu SCORIA Quadrante','El resumen se activará cuando estén cargadas las cuatro fases.');
+   else if(step===4)renderQuadranteStrap();
+   else renderQuadranteSummary();
  } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
    stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT y Quadrante son las arquitecturas que estamos implementando ahora mismo.</div>`;
