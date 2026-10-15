@@ -158,6 +158,14 @@ const quadranteDialThumbs={
   'Marrón · Sin fecha':'assets/custom/quadrante/dials/quadrante-dial-brown-no-date.png'
 };
 
+const quadranteHandsThumbs={
+  'Azul':'assets/custom/quadrante/hands/quadrante-hands-blue.png',
+  'Plata':'assets/custom/quadrante/hands/quadrante-hands-silver.png',
+  'Oro':'assets/custom/quadrante/hands/quadrante-hands-gold.png',
+  'Oro rosa':'assets/custom/quadrante/hands/quadrante-hands-rose-gold.png',
+  'Negro':'assets/custom/quadrante/hands/quadrante-hands-black.png'
+};
+
 const customUserVisuals={"bezels":"assets/custom/gmt/overview/bezels.jpg","dials":"assets/custom/gmt/overview/dials.jpg","hands":"assets/custom/gmt/overview/hands.jpg","bracelets":"assets/custom/gmt/overview/bracelets.jpg"};
 customUserVisuals.cases='assets/custom/gmt/overview/cases.jpg';
 const customThumbs={"Pepsi":"assets/custom/gmt/bezels/pepsi.png","Coke":"assets/custom/gmt/bezels/coke.png","Full Black":"assets/custom/gmt/bezels/full-black.png","Root Beer":"assets/custom/gmt/bezels/root-beer.png","Batman / Batgirl":"assets/custom/gmt/bezels/batman-batgirl.png","Bruce Wayne":"assets/custom/gmt/bezels/bruce-wayne.png","Sprite":"assets/custom/gmt/bezels/sprite.png","Brown / Black":"assets/custom/gmt/bezels/brown-black.png","Negra con fecha":"assets/custom/gmt/dials/black-date.png","Verde con fecha":"assets/custom/gmt/dials/green-date.png","Negra sin fecha":"assets/custom/gmt/dials/black-no-date.png"};
@@ -303,6 +311,19 @@ function renderQuadranteDial(){
  bindChoices(v=>state.quadranteDial=v);
 }
 
+function renderQuadranteHands(){
+ const opts=[
+  ['Azul','Azul','Agujas tipo espada · acabado azul',quadranteHandsThumbs['Azul']],
+  ['Plata','Plata','Agujas tipo espada · acabado plata',quadranteHandsThumbs['Plata']],
+  ['Oro','Oro','Agujas tipo espada · acabado oro',quadranteHandsThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Agujas tipo espada · acabado oro rosa',quadranteHandsThumbs['Oro rosa']],
+  ['Negro','Negro','Agujas tipo espada · acabado negro',quadranteHandsThumbs['Negro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige las agujas de tu SCORIA Quadrante</h2><p>Cinco acabados disponibles. Todas mantienen el mismo diseño tipo espada y la misma posición visual.</p></div></div>
+ <div class="choice-grid hands-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteHands===v,img)).join('')}</div>`;
+ bindChoices(v=>state.quadranteHands=v);
+}
+
 function renderQuadrantePending(title,text){
  stage.innerHTML=`<div class="stage-head"><div><h2>${title}</h2><p>${text}</p></div></div><div class="arch-warning">Esta fase se añadirá con los siguientes assets del SCORIA Quadrante. La Fase 1 · Caja ya está operativa.</div>`;
 }
@@ -410,6 +431,7 @@ function readyForNext(){
  if(state.architecture==='tank'){
    if(step===1)return !!state.quadranteCase;
    if(step===2)return !!state.quadranteDial;
+   if(step===3)return !!state.quadranteHands;
    return false;
  }
  if(state.architecture!=='gmt')return false;
@@ -428,7 +450,7 @@ function render(){
  else if(state.architecture==='tank'){
    if(step===1)renderQuadranteCase();
    else if(step===2)renderQuadranteDial();
-   else if(step===3)renderQuadrantePending('Elige las agujas','Aquí irán los cinco acabados de agujas del Quadrante.');
+   else if(step===3)renderQuadranteHands();
    else if(step===4)renderQuadrantePending('Elige correa o brazalete','Aquí irán las correas de cuero y el brazalete de acero compatible.');
    else renderQuadrantePending('Tu SCORIA Quadrante','El resumen se activará cuando estén cargadas las cuatro fases.');
  } else if(state.architecture!=='gmt'){
