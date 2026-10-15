@@ -131,6 +131,15 @@ const models=[
 ];
 const images={"gmt":"assets/custom/architectures/meridian-gmt.webp","oyster":"assets/custom/architectures/essenza.webp","tank":"assets/custom/architectures/quadrante-tank.webp","santos":"assets/custom/architectures/fortezza-santos.webp","chrono":"assets/custom/architectures/corsa-chrono.webp","nautilus":"assets/custom/architectures/litoral-nautilus.webp","aquanaut":"assets/custom/architectures/cala-aquanaut.webp","datejust":"assets/custom/architectures/signoria-datejust.webp","submariner":"assets/custom/architectures/abisso-submariner.webp","yacht":"assets/custom/architectures/levante-yacht.webp","royaloak":"assets/custom/architectures/mito-royaloak.webp","landdweller":"assets/custom/architectures/terranova-landdweller.webp"};
 
+const quadranteCaseThumbs={
+  'Plata':'assets/custom/quadrante/cases/quadrante-case-silver.png',
+  'Plata con diamantes':'assets/custom/quadrante/cases/quadrante-case-silver-diamond.png',
+  'Oro':'assets/custom/quadrante/cases/quadrante-case-gold.png',
+  'Oro con diamantes':'assets/custom/quadrante/cases/quadrante-case-gold-diamond.png',
+  'Oro rosa':'assets/custom/quadrante/cases/quadrante-case-rose-gold.png',
+  'Oro rosa con diamantes':'assets/custom/quadrante/cases/quadrante-case-rose-gold-diamond.png'
+};
+
 const customUserVisuals={"bezels":"assets/custom/gmt/overview/bezels.jpg","dials":"assets/custom/gmt/overview/dials.jpg","hands":"assets/custom/gmt/overview/hands.jpg","bracelets":"assets/custom/gmt/overview/bracelets.jpg"};
 customUserVisuals.cases='assets/custom/gmt/overview/cases.jpg';
 const customThumbs={"Pepsi":"assets/custom/gmt/bezels/pepsi.png","Coke":"assets/custom/gmt/bezels/coke.png","Full Black":"assets/custom/gmt/bezels/full-black.png","Root Beer":"assets/custom/gmt/bezels/root-beer.png","Batman / Batgirl":"assets/custom/gmt/bezels/batman-batgirl.png","Bruce Wayne":"assets/custom/gmt/bezels/bruce-wayne.png","Sprite":"assets/custom/gmt/bezels/sprite.png","Brown / Black":"assets/custom/gmt/bezels/brown-black.png","Negra con fecha":"assets/custom/gmt/dials/black-date.png","Verde con fecha":"assets/custom/gmt/dials/green-date.png","Negra sin fecha":"assets/custom/gmt/dials/black-no-date.png"};
@@ -163,7 +172,11 @@ const state={
  handsType:'Mercedes',
  handsColor:null,
  braceletType:null,
- braceletColor:null
+ braceletColor:null,
+ quadranteCase:null,
+ quadranteDial:null,
+ quadranteHands:null,
+ quadranteStrap:null
 };
 let step=0;
 
@@ -181,9 +194,17 @@ function mediaOption(value,label,sub,active,img,extra=''){
 }
 
 function setProgress(){
- document.querySelector('#stepLabel').textContent=`FASE ${step+1} DE 8`;
- document.querySelector('#stepTitle').textContent=steps[step];
- progress.innerHTML=steps.map((_,i)=>`<span class="${i<step?'done':i===step?'active':''}"></span>`).join('');
+ if(state.architecture==='tank' && step>0){
+   const qSteps=['Caja','Esfera','Agujas','Correa / Brazalete'];
+   const qIndex=Math.min(step-1,3);
+   document.querySelector('#stepLabel').textContent=step<=4?`FASE ${qIndex+1} DE 4`:'RESUMEN';
+   document.querySelector('#stepTitle').textContent=step<=4?qSteps[qIndex]:'Resumen';
+   progress.innerHTML=qSteps.map((_,i)=>`<span class="${i<qIndex?'done':i===qIndex&&step<=4?'active':''}"></span>`).join('');
+ }else{
+   document.querySelector('#stepLabel').textContent=`FASE ${step+1} DE 8`;
+   document.querySelector('#stepTitle').textContent=steps[step];
+   progress.innerHTML=steps.map((_,i)=>`<span class="${i<step?'done':i===step?'active':''}"></span>`).join('');
+ }
  backBtn.disabled=step===0;
 }
 
@@ -201,7 +222,7 @@ function renderArchitecture(){
  models.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank')state.quadranteCase=null;advanceAfterChoice();};
    root.appendChild(b);
  });
 }
@@ -215,6 +236,24 @@ function renderCase(){
  ${optionCard('Oro rosa','Oro rosa','Rose gold',state.caseColor==='Oro rosa','<span class="big-swatch" style="background:#b87a6a"></span>')}
  </div>`;
  bindChoices(v=>state.caseColor=v);
+}
+
+function renderQuadranteCase(){
+ const opts=[
+  ['Plata','Plata','Acero pulido',quadranteCaseThumbs['Plata']],
+  ['Plata con diamantes','Plata con diamantes','Acero · diamantes',quadranteCaseThumbs['Plata con diamantes']],
+  ['Oro','Oro','Acabado dorado',quadranteCaseThumbs['Oro']],
+  ['Oro con diamantes','Oro con diamantes','Dorado · diamantes',quadranteCaseThumbs['Oro con diamantes']],
+  ['Oro rosa','Oro rosa','Rose gold',quadranteCaseThumbs['Oro rosa']],
+  ['Oro rosa con diamantes','Oro rosa con diamantes','Rose gold · diamantes',quadranteCaseThumbs['Oro rosa con diamantes']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Quadrante</h2><p>Seis acabados disponibles. Pulsa directamente sobre la caja que quieras.</p></div></div>
+ <div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.quadranteCase===v,img)).join('')}</div>`;
+ bindChoices(v=>state.quadranteCase=v);
+}
+
+function renderQuadrantePending(title,text){
+ stage.innerHTML=`<div class="stage-head"><div><h2>${title}</h2><p>${text}</p></div></div><div class="arch-warning">Esta fase se añadirá con los siguientes assets del SCORIA Quadrante. La Fase 1 · Caja ya está operativa.</div>`;
 }
 
 function renderBezel(){
@@ -317,6 +356,10 @@ function bindChoices(fn){
 
 function readyForNext(){
  if(step===0)return !!state.architecture;
+ if(state.architecture==='tank'){
+   if(step===1)return !!state.quadranteCase;
+   return false;
+ }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
  if(step===2)return !!state.bezel;
@@ -330,9 +373,15 @@ function readyForNext(){
 function render(){
  setProgress();
  if(step===0)renderArchitecture();
- else if(state.architecture!=='gmt'){
+ else if(state.architecture==='tank'){
+   if(step===1)renderQuadranteCase();
+   else if(step===2)renderQuadrantePending('Elige la esfera','Aquí irán los colores y las opciones de fecha a las 3, a las 6 o sin fecha.');
+   else if(step===3)renderQuadrantePending('Elige las agujas','Aquí irán los cinco acabados de agujas del Quadrante.');
+   else if(step===4)renderQuadrantePending('Elige correa o brazalete','Aquí irán las correas de cuero y el brazalete de acero compatible.');
+   else renderQuadrantePending('Tu SCORIA Quadrante','El resumen se activará cuando estén cargadas las cuatro fases.');
+ } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
-   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después de Meridian GMT.</p></div></div><div class="arch-warning">Ahora estamos implementando Meridian GMT paso a paso. Puedes volver y escoger Meridian para probar el flujo completo.</div>`;
+   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT y Quadrante son las arquitecturas que estamos implementando ahora mismo.</div>`;
  } else if(step===1)renderCase();
  else if(step===2)renderBezel();
  else if(step===3)renderDial();
