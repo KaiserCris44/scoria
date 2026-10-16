@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SCORIA Custom — Personaliza tu reloj</title>
+<link rel="icon" type="image/png" href="assets/custom/brand/favicon.png">
+<link rel="apple-touch-icon" href="assets/custom/brand/favicon.png">
 <meta name="description" content="SCORIA Custom. Elige una arquitectura y configura tu reloj paso a paso. Nacida en el Mediterráneo.">
 <style>
 :root{--bg:#090a0b;--panel:#101114;--panel2:#141518;--line:#2a2b2f;--text:#f0ece6;--muted:#a8a098;--gold:#b99569;--gold2:#d6b486;--ok:#d8c4a7}
@@ -28,7 +30,7 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 .arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .arch-card{position:relative;text-align:left;border:1px solid #2f3034;border-radius:20px;background:#111214;padding:0;overflow:hidden;color:inherit;cursor:pointer;transition:.18s}
 .arch-card:hover{transform:translateY(-2px);border-color:#695844} .arch-card.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(185,149,105,.25)}
-.arch-card img{width:100%;aspect-ratio:4/3;object-fit:contain;background:#090a0b;display:block} .arch-copy{padding:22px 22px 24px} .arch-copy strong{display:block;font:400 20px Georgia,serif;line-height:1.18;margin-bottom:7px} .arch-copy small{display:block;color:#8f8880;margin-top:0;line-height:1.45}
+.arch-card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#090a0b;display:block} .arch-copy{padding:22px 22px 24px} .arch-copy strong{display:block;font:400 20px Georgia,serif;line-height:1.2;margin:0 0 7px} .arch-copy small{display:block;color:#8f8880;margin:0;line-height:1.45}
 .selected-chip{position:absolute;top:12px;right:12px;padding:6px 9px;border-radius:999px;background:#241e18;border:1px solid #765f45;color:#d9c2a4;font-size:10px;letter-spacing:.12em;opacity:0} .arch-card.active .selected-chip{opacity:1}
 .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px} .choice-grid.two{grid-template-columns:repeat(2,1fr)} .choice-grid.five{grid-template-columns:repeat(5,1fr)}
 .choice{min-height:116px;padding:18px;text-align:left;border:1px solid #33343a;border-radius:18px;background:#121316;color:inherit;cursor:pointer;transition:.16s}
@@ -120,21 +122,35 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 
 <script>
 const models=[
-['gmt','SCORIA Meridian GMT','GMT · viajero y deportivo'],
-['oyster','SCORIA Essenza','Redondo · limpio y versátil'],
-['tank','SCORIA Quadrante','Rectangular · clásico y elegante'],
-['santos','SCORIA Fortezza','Cuadrado · arquitectónico'],
-['chrono','SCORIA Corsa','Cronógrafo · carácter deportivo'],
-['nautilus','SCORIA Litoral','Integrado · deportivo refinado'],
-['aquanaut','SCORIA Cala','Caucho · casual deportivo'],
-['datejust','SCORIA Signoria','Clásico · elegante y luminoso'],
 ['submariner','SCORIA Abisso','Diver · robusto y funcional'],
-['yacht','SCORIA Levante','Náutico · deportivo elegante'],
+['aquanaut','SCORIA Cala','Deportivo · caucho y libertad'],
+['chrono','SCORIA Corsa','Cronógrafo · carácter deportivo'],
+['oyster','SCORIA Essenza','Redondo · limpio y versátil'],
+['santos','SCORIA Fortezza','Cuadrado · arquitectónico'],
+['yacht','SCORIA Levante','Piloto · legible y aventurero'],
+['nautilus','SCORIA Litoral','Integrado · deportivo refinado'],
+['gmt','SCORIA Meridian GMT','GMT · viajero y deportivo'],
 ['royaloak','SCORIA Mito','Octogonal · integrado'],
+['orbita','SCORIA Orbita','Cronógrafo espacial · color y exploración'],
+['tank','SCORIA Quadrante','Rectangular · clásico y elegante'],
 ['landdweller','SCORIA Terranova','Integrado · contemporáneo'],
-['tonneau','SCORIA Tonneau','Tonneau · técnico y expresivo']
+['tonneau','SCORIA Vantaggio','Tonneau · deportivo y expresivo']
 ];
-const images={"gmt":"assets/custom/architectures/meridian-gmt.webp","oyster":"assets/custom/architectures/essenza.webp","tank":"assets/custom/architectures/quadrante-tank.webp","santos":"assets/custom/architectures/fortezza-santos.webp","chrono":"assets/custom/architectures/corsa-chrono.webp","nautilus":"assets/custom/architectures/litoral-nautilus.webp","aquanaut":"assets/custom/architectures/cala-aquanaut.webp","datejust":"assets/custom/architectures/signoria-datejust.webp","submariner":"assets/custom/architectures/abisso-submariner.webp","yacht":"assets/custom/architectures/levante-yacht.webp","royaloak":"assets/custom/architectures/mito-royaloak.webp","landdweller":"assets/custom/architectures/terranova-landdweller.webp"};
+const images={
+  "submariner":"assets/custom/architectures/abisso-diver.webp",
+  "aquanaut":"assets/custom/architectures/cala-sport.webp",
+  "chrono":"assets/custom/architectures/corsa-chrono.webp",
+  "oyster":"assets/custom/architectures/essenza.webp",
+  "santos":"assets/custom/architectures/fortezza-square.webp",
+  "yacht":"assets/custom/architectures/levante-pilot.webp",
+  "nautilus":"assets/custom/architectures/litoral-integrated.webp",
+  "gmt":"assets/custom/architectures/meridian-gmt.webp",
+  "royaloak":"assets/custom/architectures/mito-octagonal.webp",
+  "orbita":"assets/custom/architectures/orbita-space-chrono.webp",
+  "tank":"assets/custom/architectures/quadrante-tank.webp",
+  "landdweller":"assets/custom/architectures/terranova-contemporary.webp",
+  "tonneau":"assets/custom/architectures/vantaggio-tonneau.webp"
+};
 
 const quadranteCaseThumbs={
   'Plata':'assets/custom/quadrante/cases/quadrante-case-silver.png',
@@ -277,7 +293,7 @@ function renderArchitecture(){
  sortedModels.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;}advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
 }
