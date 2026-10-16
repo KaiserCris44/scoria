@@ -161,6 +161,17 @@ const quadranteCaseThumbs={
   'Oro rosa con diamantes':'assets/custom/quadrante/cases/quadrante-case-rose-gold-diamond.png'
 };
 
+const calaCaseThumbs={
+  'Plata':'assets/custom/cala/cases/cala-case-silver.png',
+  'Plata con diamantes':'assets/custom/cala/cases/cala-case-silver-diamond.png',
+  'Oro':'assets/custom/cala/cases/cala-case-gold.png',
+  'Oro con diamantes':'assets/custom/cala/cases/cala-case-gold-diamond.png',
+  'Oro rosa':'assets/custom/cala/cases/cala-case-rose-gold.png',
+  'Oro rosa con diamantes':'assets/custom/cala/cases/cala-case-rose-gold-diamond.png',
+  'Negro':'assets/custom/cala/cases/cala-case-black.png',
+  'Negro con diamantes':'assets/custom/cala/cases/cala-case-black-diamond.png'
+};
+
 const quadranteDialThumbs={
   'Azul · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-blue-date-3.png',
   'Azul · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-blue-date-6.png',
@@ -246,7 +257,8 @@ const state={
  quadranteCase:null,
  quadranteDial:null,
  quadranteHands:null,
- quadranteStrap:null
+ quadranteStrap:null,
+ calaCase:null
 };
 let step=0;
 
@@ -264,8 +276,10 @@ function mediaOption(value,label,sub,active,img,extra=''){
 }
 
 function setProgress(){
- if(state.architecture==='tank' && step>0){
-   const qSteps=['Caja','Esfera','Agujas','Correa / Brazalete'];
+ if((state.architecture==='tank'||state.architecture==='aquanaut') && step>0){
+   const qSteps=state.architecture==='tank'
+     ?['Caja','Esfera','Agujas','Correa / Brazalete']
+     :['Caja','Esfera','Agujas','Correa de caucho'];
    const qIndex=Math.min(step-1,3);
    document.querySelector('#stepLabel').textContent=step<=4?`FASE ${qIndex+1} DE 4`:'RESUMEN';
    document.querySelector('#stepTitle').textContent=step<=4?qSteps[qIndex]:'Resumen';
@@ -293,7 +307,7 @@ function renderArchitecture(){
  sortedModels.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
 }
@@ -307,6 +321,26 @@ function renderCase(){
  ${optionCard('Oro rosa','Oro rosa','Rose gold',state.caseColor==='Oro rosa','<span class="big-swatch" style="background:#b87a6a"></span>')}
  </div>`;
  bindChoices(v=>state.caseColor=v);
+}
+
+function renderCalaCase(){
+ const opts=[
+  ['Plata','Plata','Acero pulido',calaCaseThumbs['Plata']],
+  ['Plata con diamantes','Plata con diamantes','Acero · diamantes en el contorno',calaCaseThumbs['Plata con diamantes']],
+  ['Oro','Oro','Acabado dorado',calaCaseThumbs['Oro']],
+  ['Oro con diamantes','Oro con diamantes','Dorado · diamantes en el contorno',calaCaseThumbs['Oro con diamantes']],
+  ['Oro rosa','Oro rosa','Acabado rose gold',calaCaseThumbs['Oro rosa']],
+  ['Oro rosa con diamantes','Oro rosa con diamantes','Rose gold · diamantes en el contorno',calaCaseThumbs['Oro rosa con diamantes']],
+  ['Negro','Negro','Acabado negro',calaCaseThumbs['Negro']],
+  ['Negro con diamantes','Negro con diamantes','Negro · diamantes en el contorno',calaCaseThumbs['Negro con diamantes']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Cala</h2><p>Ocho acabados disponibles. Las variantes Diamond incorporan diamantes alrededor de la caja.</p></div></div>
+ <div class="choice-grid bezel-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.calaCase===v,img)).join('')}</div>`;
+ bindChoices(v=>state.calaCase=v);
+}
+
+function renderCalaPending(title,text){
+ stage.innerHTML=`<div class="stage-head"><div><h2>${title}</h2><p>${text}</p></div></div><div class="arch-warning">La Fase 1 · Caja del SCORIA Cala ya está operativa. Esta fase se activará cuando incorporemos sus siguientes assets.</div>`;
 }
 
 function renderQuadranteCase(){
@@ -529,6 +563,10 @@ function readyForNext(){
    if(step===4)return !!state.quadranteStrap;
    return true;
  }
+ if(state.architecture==='aquanaut'){
+   if(step===1)return !!state.calaCase;
+   return false;
+ }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
  if(step===2)return !!state.bezel;
@@ -548,9 +586,15 @@ function render(){
    else if(step===3)renderQuadranteHands();
    else if(step===4)renderQuadranteStrap();
    else renderQuadranteSummary();
+ } else if(state.architecture==='aquanaut'){
+   if(step===1)renderCalaCase();
+   else if(step===2)renderCalaPending('Elige la esfera de tu SCORIA Cala','Aquí irán las esferas Normal y Skeleton.');
+   else if(step===3)renderCalaPending('Elige las agujas de tu SCORIA Cala','Aquí irán los cuatro acabados de agujas y la elección opcional del color del segundero.');
+   else if(step===4)renderCalaPending('Elige la correa de caucho','Aquí irán las siete correas de caucho disponibles.');
+   else renderCalaPending('Tu SCORIA Cala','El resumen se activará cuando estén completas las cuatro fases.');
  } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
-   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT y Quadrante son las arquitecturas que estamos implementando ahora mismo.</div>`;
+   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante y Cala son las arquitecturas que estamos implementando ahora mismo.</div>`;
  } else if(step===1)renderCase();
  else if(step===2)renderBezel();
  else if(step===3)renderDial();
