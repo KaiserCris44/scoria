@@ -37,6 +37,13 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 .choice:hover{border-color:#6a5743} .choice.active{border-color:var(--gold);background:linear-gradient(180deg,rgba(185,149,105,.10),#121316)}
 .choice b{display:block;font-size:16px} .choice small{display:block;color:#928a82;margin-top:8px;line-height:1.45} .swatch{width:18px;height:18px;border-radius:50%;display:inline-block;vertical-align:-4px;margin-right:8px;border:1px solid rgba(255,255,255,.3)}
 .group-title{margin:0 0 12px;color:#c8b08f;font-size:11px;letter-spacing:.17em;text-transform:uppercase}
+.seconds-selector{margin-top:28px;padding:20px;border:1px solid #2f3034;border-radius:18px;background:#0f1012}
+.seconds-selector h3{font:400 22px Georgia,serif;margin:0 0 6px}
+.seconds-selector p{margin:0 0 16px;color:#968e86;line-height:1.5;font-size:13px}
+.seconds-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.seconds-grid .choice{min-height:82px;text-align:center;padding:14px}
+@media(max-width:640px){.seconds-grid{grid-template-columns:1fr}}
+
 .subgroup{margin-top:26px} .note{margin-top:16px;padding:14px 16px;border-left:2px solid var(--gold);background:#12100e;color:#c5b8a9;line-height:1.55;font-size:13px}
 .controls{display:flex;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding:22px 30px}
 .btn{border:1px solid #3b3c41;background:#131418;color:white;padding:13px 22px;border-radius:999px;cursor:pointer} .btn.primary{background:#efeae3;color:#171717;border-color:#efeae3;font-weight:650} .btn:disabled{opacity:.35;cursor:not-allowed}
@@ -172,6 +179,41 @@ const calaCaseThumbs={
   'Negro con diamantes':'assets/custom/cala/cases/cala-case-black-diamond.png'
 };
 
+const calaNormalDialThumbs={
+  'Marrón':'assets/custom/cala/dials/cala-dial-normal-brown.png',
+  'Tiffany Blue':'assets/custom/cala/dials/cala-dial-normal-tiffany-blue.png',
+  'Navy Blue':'assets/custom/cala/dials/cala-dial-normal-navy-blue.png',
+  'Olive Green':'assets/custom/cala/dials/cala-dial-normal-olive-green.png',
+  'Black':'assets/custom/cala/dials/cala-dial-normal-black.png',
+  'White':'assets/custom/cala/dials/cala-dial-normal-white.png'
+};
+
+const calaSkeletonDialThumbs={
+  'Marrón':'assets/custom/cala/dials/cala-dial-skeleton-brown.png',
+  'Navy Blue':'assets/custom/cala/dials/cala-dial-skeleton-navy-blue.png',
+  'Olive Green':'assets/custom/cala/dials/cala-dial-skeleton-olive-green.png',
+  'Black':'assets/custom/cala/dials/cala-dial-skeleton-black.png',
+  'White':'assets/custom/cala/dials/cala-dial-skeleton-white.png',
+  'Red':'assets/custom/cala/dials/cala-dial-skeleton-red.png'
+};
+
+const calaHandsThumbs={
+  'Plata':'assets/custom/cala/hands/cala-hands-silver.png',
+  'Negro':'assets/custom/cala/hands/cala-hands-black.png',
+  'Oro':'assets/custom/cala/hands/cala-hands-gold.png',
+  'Oro rosa':'assets/custom/cala/hands/cala-hands-rose-gold.png'
+};
+
+const calaStrapThumbs={
+  'Blanca':'assets/custom/cala/straps/cala-strap-white.png',
+  'Navy Blue':'assets/custom/cala/straps/cala-strap-navy-blue.png',
+  'Roja':'assets/custom/cala/straps/cala-strap-red.png',
+  'Olive Green':'assets/custom/cala/straps/cala-strap-olive-green.png',
+  'Naranja':'assets/custom/cala/straps/cala-strap-orange.png',
+  'Marrón':'assets/custom/cala/straps/cala-strap-brown.png',
+  'Negra':'assets/custom/cala/straps/cala-strap-black.png'
+};
+
 const quadranteDialThumbs={
   'Azul · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-blue-date-3.png',
   'Azul · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-blue-date-6.png',
@@ -258,7 +300,12 @@ const state={
  quadranteDial:null,
  quadranteHands:null,
  quadranteStrap:null,
- calaCase:null
+ calaCase:null,
+ calaDialType:null,
+ calaDial:null,
+ calaHands:null,
+ calaSecondHand:'Mismo color',
+ calaStrap:null
 };
 let step=0;
 
@@ -307,7 +354,7 @@ function renderArchitecture(){
  sortedModels.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;}advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;state.calaDialType=null;state.calaDial=null;state.calaHands=null;state.calaSecondHand='Mismo color';state.calaStrap=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
 }
@@ -339,8 +386,122 @@ function renderCalaCase(){
  bindChoices(v=>state.calaCase=v);
 }
 
+function renderCalaDial(){
+ const normal=[
+  ['Marrón','Marrón','Esfera normal · NH35A',calaNormalDialThumbs['Marrón']],
+  ['Tiffany Blue','Tiffany Blue','Esfera normal · NH35A',calaNormalDialThumbs['Tiffany Blue']],
+  ['Navy Blue','Navy Blue','Esfera normal · NH35A',calaNormalDialThumbs['Navy Blue']],
+  ['Olive Green','Olive Green','Esfera normal · NH35A',calaNormalDialThumbs['Olive Green']],
+  ['Black','Black','Esfera normal · NH35A',calaNormalDialThumbs['Black']],
+  ['White','White','Esfera normal · NH35A',calaNormalDialThumbs['White']]
+ ];
+ const skeleton=[
+  ['Marrón','Marrón','Esfera skeleton · NH38',calaSkeletonDialThumbs['Marrón']],
+  ['Navy Blue','Navy Blue','Esfera skeleton · NH38',calaSkeletonDialThumbs['Navy Blue']],
+  ['Olive Green','Olive Green','Esfera skeleton · NH38',calaSkeletonDialThumbs['Olive Green']],
+  ['Black','Black','Esfera skeleton · NH38',calaSkeletonDialThumbs['Black']],
+  ['White','White','Esfera skeleton · NH38',calaSkeletonDialThumbs['White']],
+  ['Red','Red','Esfera skeleton · NH38',calaSkeletonDialThumbs['Red']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la esfera de tu SCORIA Cala</h2><p>Selecciona entre las esferas normales con movimiento NH35A o las esferas skeleton con movimiento NH38, de coste superior.</p></div></div>
+ <div class="option-group"><span class="group-label">NORMAL · NH35A</span>
+ <div class="choice-grid bezel-grid">${normal.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.calaDialType==='Normal'&&state.calaDial===v,img)).join('')}</div></div>
+ <div class="option-group"><span class="group-label">SKELETON · NH38</span>
+ <div class="choice-grid bezel-grid">${skeleton.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.calaDialType==='Skeleton'&&state.calaDial===v,img)).join('')}</div></div>`;
+ stage.querySelectorAll('.choice').forEach(b=>b.onclick=()=>{
+   const group=b.closest('.option-group');
+   state.calaDialType = group && group.querySelector('.group-label').textContent.includes('SKELETON') ? 'Skeleton' : 'Normal';
+   state.calaDial=b.dataset.value;
+   advanceAfterChoice();
+ });
+}
+
+function renderCalaHands(){
+ const opts=[
+  ['Plata','Plata','Agujas principales · acabado plata',calaHandsThumbs['Plata']],
+  ['Negro','Negro','Agujas principales · acabado negro',calaHandsThumbs['Negro']],
+  ['Oro','Oro','Agujas principales · acabado oro',calaHandsThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Agujas principales · acabado rose gold',calaHandsThumbs['Oro rosa']]
+ ];
+ const seconds=[
+  ['Mismo color','Mismo color','El segundero mantiene el acabado de las agujas principales'],
+  ['Rojo','Rojo','Segundero en contraste rojo'],
+  ['Naranja','Naranja','Segundero en contraste naranja']
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige las agujas de tu SCORIA Cala</h2><p>Cuatro acabados para las agujas principales. Después puedes mantener el segundero del mismo color o elegirlo en rojo o naranja.</p></div></div>
+ <div class="choice-grid hands-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.calaHands===v,img)).join('')}</div>
+ <div class="seconds-selector">
+   <h3>¿Quieres la aguja segundera de otro color?</h3>
+   <p>La elección del segundero se registra por separado de las agujas principales.</p>
+   <div class="seconds-grid">${seconds.map(([v,l,sub])=>optionCard(v,l,sub,state.calaSecondHand===v)).join('')}</div>
+ </div>`;
+ stage.querySelectorAll('.hands-grid .choice').forEach(b=>b.onclick=()=>{
+   state.calaHands=b.dataset.value;
+   render();
+ });
+ stage.querySelectorAll('.seconds-grid .choice').forEach(b=>b.onclick=()=>{
+   state.calaSecondHand=b.dataset.value;
+   if(state.calaHands) advanceAfterChoice(); else render();
+ });
+}
+
+function calaCaseFinish(){
+ if(state.calaCase==='Plata'||state.calaCase==='Plata con diamantes')return 'Plata';
+ if(state.calaCase==='Oro'||state.calaCase==='Oro con diamantes')return 'Oro';
+ if(state.calaCase==='Oro rosa'||state.calaCase==='Oro rosa con diamantes')return 'Oro rosa';
+ if(state.calaCase==='Negro'||state.calaCase==='Negro con diamantes')return 'Negro';
+ return 'Acabado de la caja';
+}
+
+function renderCalaStrap(){
+ const opts=[
+  ['Blanca','Blanca','Caucho blanco',calaStrapThumbs['Blanca']],
+  ['Navy Blue','Navy Blue','Caucho azul marino',calaStrapThumbs['Navy Blue']],
+  ['Roja','Roja','Caucho rojo',calaStrapThumbs['Roja']],
+  ['Olive Green','Olive Green','Caucho verde oliva',calaStrapThumbs['Olive Green']],
+  ['Naranja','Naranja','Caucho naranja',calaStrapThumbs['Naranja']],
+  ['Marrón','Marrón','Caucho marrón',calaStrapThumbs['Marrón']],
+  ['Negra','Negra','Caucho negro',calaStrapThumbs['Negra']]
+ ];
+ const finish=calaCaseFinish();
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la correa de caucho de tu SCORIA Cala</h2><p>Siete colores disponibles. El herraje final de la correa se adaptará automáticamente al acabado de la caja elegida.</p></div></div>
+ <div class="choice-grid bracelet-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,`${sub} · herraje ${finish.toLowerCase()}`,state.calaStrap===v,img)).join('')}</div>
+ <div class="note">Las imágenes sirven para escoger el color del caucho. En la pieza final, hebilla y herrajes seguirán el acabado de la caja: plata, oro, oro rosa o negro.</div>`;
+ bindChoices(v=>state.calaStrap=v);
+}
+
+function renderCalaSummary(){
+ const arch=models.find(x=>x[0]===state.architecture);
+ const movement=state.calaDialType==='Skeleton'?'NH38':'NH35A';
+ const finish=calaCaseFinish();
+ const rows=[
+  ['Arquitectura',arch?.[1]||'—'],
+  ['Caja',state.calaCase||'—'],
+  ['Esfera',`${state.calaDialType||'—'} · ${state.calaDial||'—'}`],
+  ['Movimiento',movement],
+  ['Agujas',state.calaHands||'—'],
+  ['Segundero',state.calaSecondHand||'—'],
+  ['Correa de caucho',state.calaStrap||'—'],
+  ['Herraje de correa',finish]
+ ];
+ const text=`SOLICITUD SCORIA CUSTOM
+Modelo: ${arch?.[1]||''}
+Caja: ${state.calaCase||''}
+Esfera: ${state.calaDialType||''} · ${state.calaDial||''}
+Movimiento: ${movement}
+Agujas: ${state.calaHands||''}
+Segundero: ${state.calaSecondHand||''}
+Correa de caucho: ${state.calaStrap||''}
+Herraje de correa: ${finish}`;
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un SCORIA Cala en SCORIA Custom y me gustaría consultarlo.\n\n'+text)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Cala')}&body=${encodeURIComponent('Hola SCORIA,\n\n'+text)}`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Cala</h2><p>Configuración completa. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
+ <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
+ <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
+}
+
 function renderCalaPending(title,text){
- stage.innerHTML=`<div class="stage-head"><div><h2>${title}</h2><p>${text}</p></div></div><div class="arch-warning">La Fase 1 · Caja del SCORIA Cala ya está operativa. Esta fase se activará cuando incorporemos sus siguientes assets.</div>`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>${title}</h2><p>${text}</p></div></div><div class="arch-warning">Esta fase se activará cuando incorporemos sus siguientes assets.</div>`;
 }
 
 function renderQuadranteCase(){
@@ -565,7 +726,10 @@ function readyForNext(){
  }
  if(state.architecture==='aquanaut'){
    if(step===1)return !!state.calaCase;
-   return false;
+   if(step===2)return !!state.calaDial;
+   if(step===3)return !!state.calaHands&&!!state.calaSecondHand;
+   if(step===4)return !!state.calaStrap;
+   return true;
  }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
@@ -588,10 +752,10 @@ function render(){
    else renderQuadranteSummary();
  } else if(state.architecture==='aquanaut'){
    if(step===1)renderCalaCase();
-   else if(step===2)renderCalaPending('Elige la esfera de tu SCORIA Cala','Aquí irán las esferas Normal y Skeleton.');
-   else if(step===3)renderCalaPending('Elige las agujas de tu SCORIA Cala','Aquí irán los cuatro acabados de agujas y la elección opcional del color del segundero.');
-   else if(step===4)renderCalaPending('Elige la correa de caucho','Aquí irán las siete correas de caucho disponibles.');
-   else renderCalaPending('Tu SCORIA Cala','El resumen se activará cuando estén completas las cuatro fases.');
+   else if(step===2)renderCalaDial();
+   else if(step===3)renderCalaHands();
+   else if(step===4)renderCalaStrap();
+   else renderCalaSummary();
  } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
    stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante y Cala son las arquitecturas que estamos implementando ahora mismo.</div>`;
