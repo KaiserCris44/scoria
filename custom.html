@@ -30,7 +30,7 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 .arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .arch-card{position:relative;text-align:left;border:1px solid #2f3034;border-radius:20px;background:#111214;padding:0;overflow:hidden;color:inherit;cursor:pointer;transition:.18s}
 .arch-card:hover{transform:translateY(-2px);border-color:#695844} .arch-card.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(185,149,105,.25)}
-.arch-card img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#090a0b;display:block} .arch-copy{padding:22px 22px 24px} .arch-copy strong{display:block;font:400 20px Georgia,serif;line-height:1.2;margin:0 0 7px} .arch-copy small{display:block;color:#8f8880;margin:0;line-height:1.45}
+.arch-card img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center;background:#090a0b;display:block} .arch-copy{padding:26px 26px 30px} .arch-copy strong{display:block;font:400 20px Georgia,serif;line-height:1.2;margin:0 0 8px;padding-right:4px} .arch-copy small{display:block;color:#8f8880;margin:0;line-height:1.45}
 .selected-chip{position:absolute;top:12px;right:12px;padding:6px 9px;border-radius:999px;background:#241e18;border:1px solid #765f45;color:#d9c2a4;font-size:10px;letter-spacing:.12em;opacity:0} .arch-card.active .selected-chip{opacity:1}
 .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px} .choice-grid.two{grid-template-columns:repeat(2,1fr)} .choice-grid.five{grid-template-columns:repeat(5,1fr)}
 .choice{min-height:116px;padding:18px;text-align:left;border:1px solid #33343a;border-radius:18px;background:#121316;color:inherit;cursor:pointer;transition:.16s}
@@ -127,7 +127,7 @@ const models=[
 ['chrono','SCORIA Corsa','Cronógrafo · carácter deportivo'],
 ['oyster','SCORIA Essenza','Redondo · limpio y versátil'],
 ['santos','SCORIA Fortezza','Cuadrado · arquitectónico'],
-['yacht','SCORIA Levante','Piloto · legible y aventurero'],
+['yacht','SCORIA Muchamiel','Piloto · legible y aventurero'],
 ['nautilus','SCORIA Litoral','Integrado · deportivo refinado'],
 ['gmt','SCORIA Meridian GMT','GMT · viajero y deportivo'],
 ['royaloak','SCORIA Mito','Octogonal · integrado'],
@@ -137,18 +137,18 @@ const models=[
 ['tonneau','SCORIA Vantaggio','Tonneau · deportivo y expresivo']
 ];
 const images={
-  "submariner":"assets/custom/architectures/abisso-diver.webp",
-  "aquanaut":"assets/custom/architectures/cala-sport.webp",
+  "submariner":"assets/custom/architectures/abisso-submariner.png",
+  "aquanaut":"assets/custom/architectures/cala-aquanaut.webp",
   "chrono":"assets/custom/architectures/corsa-chrono.webp",
-  "oyster":"assets/custom/architectures/essenza.webp",
-  "santos":"assets/custom/architectures/fortezza-square.webp",
-  "yacht":"assets/custom/architectures/levante-pilot.webp",
-  "nautilus":"assets/custom/architectures/litoral-integrated.webp",
+  "oyster":"assets/custom/architectures/essenza-portugieser.png",
+  "santos":"assets/custom/architectures/fortezza-santos.webp",
+  "yacht":"assets/custom/architectures/muchamiel-pilot.webp",
+  "nautilus":"assets/custom/architectures/litoral-nautilus.webp",
   "gmt":"assets/custom/architectures/meridian-gmt.webp",
-  "royaloak":"assets/custom/architectures/mito-octagonal.webp",
-  "orbita":"assets/custom/architectures/orbita-space-chrono.webp",
+  "royaloak":"assets/custom/architectures/mito-royaloak.webp",
+  "orbita":"assets/custom/architectures/orbita-moonswatch.webp",
   "tank":"assets/custom/architectures/quadrante-tank.webp",
-  "landdweller":"assets/custom/architectures/terranova-contemporary.webp",
+  "landdweller":"assets/custom/architectures/terranova-landdweller.webp",
   "tonneau":"assets/custom/architectures/vantaggio-tonneau.webp"
 };
 
