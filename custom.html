@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SCORIA Custom — Personaliza tu reloj</title>
-<link rel="icon" type="image/png" href="assets/custom/brand/favicon.png">
-<link rel="apple-touch-icon" href="assets/custom/brand/favicon.png">
+<link rel="icon" type="image/png" href="scoria-favicon.png">
+<link rel="apple-touch-icon" href="scoria-favicon.png">
 <meta name="description" content="SCORIA Custom. Elige una arquitectura y configura tu reloj paso a paso. Nacida en el Mediterráneo.">
 <style>
 :root{--bg:#090a0b;--panel:#101114;--panel2:#141518;--line:#2a2b2f;--text:#f0ece6;--muted:#a8a098;--gold:#b99569;--gold2:#d6b486;--ok:#d8c4a7}
@@ -105,7 +105,7 @@ main{max-width:1460px;margin:auto;padding:54px 28px 90px}
 </head>
 <body>
 <header><div class="header-inner">
-<a class="brand" href="index.html"><img class="brand-lockup" src="assets/custom/brand/scoria-header-logo.png" alt="SCORIA · Nacida en el Mediterráneo."></a>
+<a class="brand" href="index.html"><img class="brand-lockup" src="scoria-header-logo.png" alt="SCORIA · Nacida en el Mediterráneo."></a>
 <nav><a href="index.html#collection">Collection</a><a href="selected.html">Selected</a><a href="index.html#marca">Sobre nosotros</a><a class="nav-cta" href="custom.html">Personaliza tu reloj</a></nav>
 </div></header>
 
@@ -478,12 +478,12 @@ Esfera: ${state.abissoDial||''}
 Agujas: Mercedes · ${state.abissoHands||''}
 Brazalete: Oyster · ${state.abissoBracelet||''}
 Movimiento: TMI NH35 · Automático`;
- const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un SCORIA Abisso en SCORIA Custom y me gustaría consultarlo.
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent(`Hola, he configurado un SCORIA Abisso en SCORIA Custom y me gustaría consultarlo.
 
-'+requestText)}`;
- const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Abisso')}&body=${encodeURIComponent('Hola SCORIA,
+${requestText}`)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Abisso')}&body=${encodeURIComponent(`Hola SCORIA,
 
-'+requestText)}`;
+${requestText}`)}`;
  stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Abisso</h2><p>Configuración terminada. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
  <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
  <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
