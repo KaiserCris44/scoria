@@ -214,6 +214,41 @@ const calaStrapThumbs={
   'Negra':'assets/custom/cala/straps/cala-strap-black.png'
 };
 
+const abissoCaseThumbs={
+  'Plata':'assets/custom/abisso/cases/abisso-case-silver.png',
+  'Oro':'assets/custom/abisso/cases/abisso-case-gold.png'
+};
+
+
+const abissoBezelThumbs={
+  'Negro':'assets/custom/abisso/bezels/abisso-bezel-black.png',
+  'Negro números oro':'assets/custom/abisso/bezels/abisso-bezel-black-gold.png',
+  'Azul':'assets/custom/abisso/bezels/abisso-bezel-blue.png',
+  'Azul números oro':'assets/custom/abisso/bezels/abisso-bezel-blue-gold.png',
+  'Verde':'assets/custom/abisso/bezels/abisso-bezel-green.png',
+  'Verde números oro':'assets/custom/abisso/bezels/abisso-bezel-green-gold.png'
+};
+
+const abissoDialThumbs={
+  'Azul con fecha':'assets/custom/abisso/dials/abisso-dial-blue-date.png',
+  'Azul sin fecha':'assets/custom/abisso/dials/abisso-dial-blue-no-date.png',
+  'Negra con fecha':'assets/custom/abisso/dials/abisso-dial-black-date.png',
+  'Negra sin fecha':'assets/custom/abisso/dials/abisso-dial-black-no-date.png'
+};
+
+
+const abissoHandsThumbs={
+  'Plata':'assets/custom/abisso/hands/abisso-hands-mercedes-silver.png',
+  'Oro':'assets/custom/abisso/hands/abisso-hands-mercedes-gold.png'
+};
+
+
+const abissoBraceletThumbs={
+  'Plata':'assets/custom/abisso/bracelets/abisso-oyster-silver.png',
+  'Oro':'assets/custom/abisso/bracelets/abisso-oyster-gold.png',
+  'Bi-tono':'assets/custom/abisso/bracelets/abisso-oyster-two-tone-gold.png'
+};
+
 const quadranteDialThumbs={
   'Azul · Fecha a las 3':'assets/custom/quadrante/dials/quadrante-dial-blue-date-3.png',
   'Azul · Fecha a las 6':'assets/custom/quadrante/dials/quadrante-dial-blue-date-6.png',
@@ -305,7 +340,12 @@ const state={
  calaDial:null,
  calaHands:null,
  calaSecondHand:'Mismo color',
- calaStrap:null
+ calaStrap:null,
+ abissoCase:null,
+ abissoBezel:null,
+ abissoDial:null,
+ abissoHands:null,
+ abissoBracelet:null
 };
 let step=0;
 
@@ -323,14 +363,17 @@ function mediaOption(value,label,sub,active,img,extra=''){
 }
 
 function setProgress(){
- if((state.architecture==='tank'||state.architecture==='aquanaut') && step>0){
+ if((state.architecture==='tank'||state.architecture==='aquanaut'||state.architecture==='submariner') && step>0){
    const qSteps=state.architecture==='tank'
      ?['Caja','Esfera','Agujas','Correa / Brazalete']
-     :['Caja','Esfera','Agujas','Correa de caucho'];
-   const qIndex=Math.min(step-1,3);
-   document.querySelector('#stepLabel').textContent=step<=4?`FASE ${qIndex+1} DE 4`:'RESUMEN';
-   document.querySelector('#stepTitle').textContent=step<=4?qSteps[qIndex]:'Resumen';
-   progress.innerHTML=qSteps.map((_,i)=>`<span class="${i<qIndex?'done':i===qIndex&&step<=4?'active':''}"></span>`).join('');
+     :state.architecture==='aquanaut'
+       ?['Caja','Esfera','Agujas','Correa de caucho']
+       :['Caja','Bisel','Esfera','Agujas','Brazalete'];
+   const lastStep=qSteps.length;
+   const qIndex=Math.min(step-1,lastStep-1);
+   document.querySelector('#stepLabel').textContent=step<=lastStep?`FASE ${qIndex+1} DE ${lastStep}`:'RESUMEN';
+   document.querySelector('#stepTitle').textContent=step<=lastStep?qSteps[qIndex]:'Resumen';
+   progress.innerHTML=qSteps.map((_,i)=>`<span class="${i<qIndex?'done':i===qIndex&&step<=lastStep?'active':''}"></span>`).join('');
  }else{
    document.querySelector('#stepLabel').textContent=`FASE ${step+1} DE 8`;
    document.querySelector('#stepTitle').textContent=steps[step];
@@ -354,9 +397,96 @@ function renderArchitecture(){
  sortedModels.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;state.calaDialType=null;state.calaDial=null;state.calaHands=null;state.calaSecondHand='Mismo color';state.calaStrap=null;}advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;state.calaDialType=null;state.calaDial=null;state.calaHands=null;state.calaSecondHand='Mismo color';state.calaStrap=null;}if(id!=='submariner'){state.abissoCase=null;state.abissoBezel=null;state.abissoDial=null;state.abissoHands=null;state.abissoBracelet=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
+}
+
+function renderAbissoCase(){
+ const opts=[
+  ['Plata','Plata','Caja diver · acero cepillado y pulido',abissoCaseThumbs['Plata']],
+  ['Oro','Oro','Caja diver · acabado dorado',abissoCaseThumbs['Oro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Abisso</h2><p>Dos acabados para la arquitectura diver: plata y oro. Pulsa directamente sobre la caja que quieras.</p></div></div>
+ <div class="choice-grid two dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.abissoCase===v,img)).join('')}</div>`;
+ bindChoices(v=>state.abissoCase=v);
+}
+
+function renderAbissoBezel(){
+ const opts=[
+  ['Negro','Negro','Bisel Submariner · numerales plateados',abissoBezelThumbs['Negro']],
+  ['Negro números oro','Negro números oro','Bisel Submariner · numerales dorados',abissoBezelThumbs['Negro números oro']],
+  ['Azul','Azul','Bisel Submariner · numerales plateados',abissoBezelThumbs['Azul']],
+  ['Azul números oro','Azul números oro','Bisel Submariner · numerales dorados',abissoBezelThumbs['Azul números oro']],
+  ['Verde','Verde','Bisel Submariner · numerales plateados',abissoBezelThumbs['Verde']],
+  ['Verde números oro','Verde números oro','Bisel Submariner · numerales dorados',abissoBezelThumbs['Verde números oro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el bisel de tu SCORIA Abisso</h2><p>Seis biseles inspirados en la estética Submariner: negro, azul y verde, cada uno en versión estándar o con numerales dorados.</p></div></div>
+ <div class="choice-grid bezel-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.abissoBezel===v,img)).join('')}</div>`;
+ bindChoices(v=>state.abissoBezel=v);
+}
+
+function renderAbissoDial(){
+ const opts=[
+  ['Azul con fecha','Azul · con fecha','Fecha a las 3 · estilo diver limpio',abissoDialThumbs['Azul con fecha']],
+  ['Azul sin fecha','Azul · sin fecha','Esfera diver simétrica · sin fecha',abissoDialThumbs['Azul sin fecha']],
+  ['Negra con fecha','Negra · con fecha','Fecha a las 3 · estilo diver limpio',abissoDialThumbs['Negra con fecha']],
+  ['Negra sin fecha','Negra · sin fecha','Esfera diver simétrica · sin fecha',abissoDialThumbs['Negra sin fecha']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la esfera de tu SCORIA Abisso</h2><p>Cuatro configuraciones limpias de inspiración Submariner: negra o azul, con fecha a las 3 o sin fecha.</p></div></div>
+ <div class="choice-grid two dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.abissoDial===v,img)).join('')}</div>`;
+ bindChoices(v=>state.abissoDial=v);
+}
+
+function renderAbissoHands(){
+ const opts=[
+  ['Plata','Plata','Agujas Mercedes · acabado plata',abissoHandsThumbs['Plata']],
+  ['Oro','Oro','Agujas Mercedes · acabado oro',abissoHandsThumbs['Oro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige las agujas de tu SCORIA Abisso</h2><p>El Abisso utiliza el mismo juego Mercedes del Meridian GMT. Elige entre plata u oro.</p></div></div>
+ <div class="choice-grid two dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.abissoHands===v,img)).join('')}</div>`;
+ bindChoices(v=>state.abissoHands=v);
+}
+
+function renderAbissoBracelet(){
+ const opts=[
+  ['Plata','Plata','Oyster · acero',abissoBraceletThumbs['Plata']],
+  ['Oro','Oro','Oyster · acabado dorado',abissoBraceletThumbs['Oro']],
+  ['Bi-tono','Bi-tono','Oyster · plata / oro',abissoBraceletThumbs['Bi-tono']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el brazalete de tu SCORIA Abisso</h2><p>Tres acabados Oyster: plata, oro y bi-tono plata / oro. Son los mismos Oyster utilizados en el Meridian GMT.</p></div></div>
+ <div class="choice-grid bracelet-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.abissoBracelet===v,img)).join('')}</div>`;
+ bindChoices(v=>state.abissoBracelet=v);
+}
+
+function renderAbissoSummary(){
+ const arch=models.find(x=>x[0]===state.architecture);
+ const rows=[
+  ['Arquitectura',arch?.[1]||'—'],
+  ['Caja',state.abissoCase||'—'],
+  ['Bisel',state.abissoBezel||'—'],
+  ['Esfera',state.abissoDial||'—'],
+  ['Agujas',`Mercedes · ${state.abissoHands||'—'}`],
+  ['Brazalete',`Oyster · ${state.abissoBracelet||'—'}`],
+  ['Movimiento','TMI NH35 · Automático']
+ ];
+ const requestText=`SOLICITUD SCORIA CUSTOM
+Modelo: ${arch?.[1]||''}
+Caja: ${state.abissoCase||''}
+Bisel: ${state.abissoBezel||''}
+Esfera: ${state.abissoDial||''}
+Agujas: Mercedes · ${state.abissoHands||''}
+Brazalete: Oyster · ${state.abissoBracelet||''}
+Movimiento: TMI NH35 · Automático`;
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un SCORIA Abisso en SCORIA Custom y me gustaría consultarlo.
+
+'+requestText)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Abisso')}&body=${encodeURIComponent('Hola SCORIA,
+
+'+requestText)}`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Abisso</h2><p>Configuración terminada. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
+ <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
+ <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
 }
 
 function renderCase(){
@@ -731,6 +861,14 @@ function readyForNext(){
    if(step===4)return !!state.calaStrap;
    return true;
  }
+ if(state.architecture==='submariner'){
+   if(step===1)return !!state.abissoCase;
+   if(step===2)return !!state.abissoBezel;
+   if(step===3)return !!state.abissoDial;
+   if(step===4)return !!state.abissoHands;
+   if(step===5)return !!state.abissoBracelet;
+   return true;
+ }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
  if(step===2)return !!state.bezel;
@@ -756,9 +894,16 @@ function render(){
    else if(step===3)renderCalaHands();
    else if(step===4)renderCalaStrap();
    else renderCalaSummary();
+ } else if(state.architecture==='submariner'){
+   if(step===1)renderAbissoCase();
+   else if(step===2)renderAbissoBezel();
+   else if(step===3)renderAbissoDial();
+   else if(step===4)renderAbissoHands();
+   else if(step===5)renderAbissoBracelet();
+   else renderAbissoSummary();
  } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
-   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante y Cala son las arquitecturas que estamos implementando ahora mismo.</div>`;
+   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante, Cala y el SCORIA Abisso completo están activos.</div>`;
  } else if(step===1)renderCase();
  else if(step===2)renderBezel();
  else if(step===3)renderDial();
