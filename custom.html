@@ -159,6 +159,56 @@ const images={
   "tonneau":"assets/custom/architectures/vantaggio-tonneau.webp"
 };
 
+const fortezzaCaseThumbs={
+  'Plata':'assets/custom/fortezza/cases/fortezza-case-silver.png',
+  'Oro':'assets/custom/fortezza/cases/fortezza-case-gold.png',
+  'Oro rosa':'assets/custom/fortezza/cases/fortezza-case-rose-gold.png',
+  'Negro':'assets/custom/fortezza/cases/fortezza-case-black.png'
+};
+
+const fortezzaBezelThumbs={
+  'Plata':'assets/custom/fortezza/bezels/fortezza-bezel-silver.png',
+  'Oro':'assets/custom/fortezza/bezels/fortezza-bezel-gold.png',
+  'Oro rosa':'assets/custom/fortezza/bezels/fortezza-bezel-rose-gold.png',
+  'Negro':'assets/custom/fortezza/bezels/fortezza-bezel-black.png'
+};
+
+const fortezzaDialThumbs={
+  'Blanco · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-white-no-date.png',
+  'Blanco · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-white-date-3.png',
+  'Blanco · Texturizado · Fecha a las 6':'assets/custom/fortezza/dials/fortezza-dial-white-textured-date-6.png',
+  'Azul oscuro · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-blue-no-date.png',
+  'Azul oscuro · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-blue-date-3.png',
+  'Azul oscuro · Texturizado · Fecha a las 6':'assets/custom/fortezza/dials/fortezza-dial-blue-textured-date-6.png',
+  'Marrón · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-brown-no-date.png',
+  'Marrón · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-brown-date-3.png',
+  'Tiffany Blue · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-tiffany-no-date.png',
+  'Tiffany Blue · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-tiffany-date-3.png',
+  'Verde oscuro · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-dark-green-no-date.png',
+  'Verde oscuro · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-dark-green-date-3.png',
+  'Negro · Liso · Sin fecha':'assets/custom/fortezza/dials/fortezza-dial-black-no-date.png',
+  'Negro · Liso · Fecha a las 3':'assets/custom/fortezza/dials/fortezza-dial-black-date-3.png'
+};
+
+const fortezzaHandsThumbs={
+  'Plata':'assets/custom/fortezza/hands/fortezza-hands-silver.png',
+  'Oro':'assets/custom/fortezza/hands/fortezza-hands-gold.png',
+  'Oro rosa':'assets/custom/fortezza/hands/fortezza-hands-rose-gold.png',
+  'Azul':'assets/custom/fortezza/hands/fortezza-hands-blue.png',
+  'Quadrante':'assets/custom/fortezza/hands/fortezza-hands-quadrante-blue-no-lume.png'
+};
+
+const fortezzaBraceletThumbs={
+  'Plata':'assets/custom/fortezza/bracelets/fortezza-bracelet-silver.png',
+  'Oro':'assets/custom/fortezza/bracelets/fortezza-bracelet-gold.png',
+  'Oro rosa':'assets/custom/fortezza/bracelets/fortezza-bracelet-rose-gold.png',
+  'Negro':'assets/custom/fortezza/bracelets/fortezza-bracelet-black.png',
+  'Silver Gold':'assets/custom/fortezza/bracelets/fortezza-bracelet-silver-gold.png',
+  'Silver Rose Gold':'assets/custom/fortezza/bracelets/fortezza-bracelet-silver-rose-gold.png',
+  'Cuero marrón':'assets/custom/fortezza/bracelets/fortezza-bracelet-leather-brown.png',
+  'Cuero negro':'assets/custom/fortezza/bracelets/fortezza-bracelet-leather-black.png'
+};
+
 const quadranteCaseThumbs={
   'Plata':'assets/custom/quadrante/cases/quadrante-case-silver.png',
   'Plata con diamantes':'assets/custom/quadrante/cases/quadrante-case-silver-diamond.png',
@@ -345,7 +395,12 @@ const state={
  abissoBezel:null,
  abissoDial:null,
  abissoHands:null,
- abissoBracelet:null
+ abissoBracelet:null,
+ fortezzaCase:null,
+ fortezzaBezel:null,
+ fortezzaDial:null,
+ fortezzaHands:null,
+ fortezzaBracelet:null
 };
 let step=0;
 
@@ -363,12 +418,14 @@ function mediaOption(value,label,sub,active,img,extra=''){
 }
 
 function setProgress(){
- if((state.architecture==='tank'||state.architecture==='aquanaut'||state.architecture==='submariner') && step>0){
+ if((state.architecture==='tank'||state.architecture==='aquanaut'||state.architecture==='submariner'||state.architecture==='santos') && step>0){
    const qSteps=state.architecture==='tank'
      ?['Caja','Esfera','Agujas','Correa / Brazalete']
      :state.architecture==='aquanaut'
        ?['Caja','Esfera','Agujas','Correa de caucho']
-       :['Caja','Bisel','Esfera','Agujas','Brazalete'];
+       :state.architecture==='santos'
+         ?['Caja','Bisel','Esfera','Agujas','Brazalete / Correa']
+         :['Caja','Bisel','Esfera','Agujas','Brazalete'];
    const lastStep=qSteps.length;
    const qIndex=Math.min(step-1,lastStep-1);
    document.querySelector('#stepLabel').textContent=step<=lastStep?`FASE ${qIndex+1} DE ${lastStep}`:'RESUMEN';
@@ -397,9 +454,108 @@ function renderArchitecture(){
  sortedModels.forEach(([id,name,spec])=>{
    const b=document.createElement('button');b.type='button';b.className='arch-card'+(state.architecture===id?' active':'');
    b.innerHTML=`<span class="selected-chip">SELECCIONADO</span><img src="${images[id]}" alt="${esc(name)}"><span class="arch-copy"><strong>${esc(name)}</strong><small>${esc(spec)}</small></span>`;
-   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;state.calaDialType=null;state.calaDial=null;state.calaHands=null;state.calaSecondHand='Mismo color';state.calaStrap=null;}if(id!=='submariner'){state.abissoCase=null;state.abissoBezel=null;state.abissoDial=null;state.abissoHands=null;state.abissoBracelet=null;}advanceAfterChoice();};
+   b.onclick=()=>{state.architecture=id;if(id!=='tank'){state.quadranteCase=null;state.quadranteDial=null;state.quadranteHands=null;state.quadranteStrap=null;}if(id!=='aquanaut'){state.calaCase=null;state.calaDialType=null;state.calaDial=null;state.calaHands=null;state.calaSecondHand='Mismo color';state.calaStrap=null;}if(id!=='submariner'){state.abissoCase=null;state.abissoBezel=null;state.abissoDial=null;state.abissoHands=null;state.abissoBracelet=null;}if(id!=='santos'){state.fortezzaCase=null;state.fortezzaBezel=null;state.fortezzaDial=null;state.fortezzaHands=null;state.fortezzaBracelet=null;}advanceAfterChoice();};
    root.appendChild(b);
  });
+}
+
+function renderFortezzaCase(){
+ const opts=[
+  ['Plata','Plata','Caja Fortezza · acabado plata',fortezzaCaseThumbs['Plata']],
+  ['Oro','Oro','Caja Fortezza · acabado oro',fortezzaCaseThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Caja Fortezza · acabado oro rosa',fortezzaCaseThumbs['Oro rosa']],
+  ['Negro','Negro','Caja Fortezza · acabado negro',fortezzaCaseThumbs['Negro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la caja de tu SCORIA Fortezza</h2><p>Cuatro acabados para la arquitectura cuadrada del Fortezza. Pulsa directamente sobre la caja que quieras.</p></div></div>
+ <div class="choice-grid two dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.fortezzaCase===v,img)).join('')}</div>`;
+ bindChoices(v=>state.fortezzaCase=v);
+}
+
+function renderFortezzaBezel(){
+ const opts=[
+  ['Plata','Plata','Bisel Fortezza · acabado plata',fortezzaBezelThumbs['Plata']],
+  ['Oro','Oro','Bisel Fortezza · acabado oro',fortezzaBezelThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Bisel Fortezza · acabado oro rosa',fortezzaBezelThumbs['Oro rosa']],
+  ['Negro','Negro','Bisel Fortezza · acabado negro',fortezzaBezelThumbs['Negro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el bisel de tu SCORIA Fortezza</h2><p>El bisel es independiente de la caja: puedes mantener un acabado uniforme o crear una configuración bicolor.</p></div></div>
+ <div class="choice-grid bezel-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.fortezzaBezel===v,img)).join('')}</div>`;
+ bindChoices(v=>state.fortezzaBezel=v);
+}
+
+function renderFortezzaDial(){
+ const opts=[
+  ['Blanco · Liso · Sin fecha','Blanco · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Blanco · Liso · Sin fecha']],
+  ['Blanco · Liso · Fecha a las 3','Blanco · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Blanco · Liso · Fecha a las 3']],
+  ['Blanco · Texturizado · Fecha a las 6','Blanco texturizado · fecha a las 6','Texturizado · fecha a las 6',fortezzaDialThumbs['Blanco · Texturizado · Fecha a las 6']],
+  ['Azul oscuro · Liso · Sin fecha','Azul oscuro · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Azul oscuro · Liso · Sin fecha']],
+  ['Azul oscuro · Liso · Fecha a las 3','Azul oscuro · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Azul oscuro · Liso · Fecha a las 3']],
+  ['Azul oscuro · Texturizado · Fecha a las 6','Azul texturizado · fecha a las 6','Texturizado · fecha a las 6',fortezzaDialThumbs['Azul oscuro · Texturizado · Fecha a las 6']],
+  ['Marrón · Liso · Sin fecha','Marrón · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Marrón · Liso · Sin fecha']],
+  ['Marrón · Liso · Fecha a las 3','Marrón · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Marrón · Liso · Fecha a las 3']],
+  ['Tiffany Blue · Liso · Sin fecha','Tiffany Blue · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Tiffany Blue · Liso · Sin fecha']],
+  ['Tiffany Blue · Liso · Fecha a las 3','Tiffany Blue · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Tiffany Blue · Liso · Fecha a las 3']],
+  ['Verde oscuro · Liso · Sin fecha','Verde oscuro · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Verde oscuro · Liso · Sin fecha']],
+  ['Verde oscuro · Liso · Fecha a las 3','Verde oscuro · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Verde oscuro · Liso · Fecha a las 3']],
+  ['Negro · Liso · Sin fecha','Negro · sin fecha','Liso · sin fecha',fortezzaDialThumbs['Negro · Liso · Sin fecha']],
+  ['Negro · Liso · Fecha a las 3','Negro · fecha a las 3','Liso · fecha a las 3',fortezzaDialThumbs['Negro · Liso · Fecha a las 3']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige la esfera de tu SCORIA Fortezza</h2><p>Blanco y azul incorporan además una versión texturizada con fecha a las 6. El resto de esferas lisas están disponibles sin fecha o con fecha a las 3.</p></div></div>
+ <div class="choice-grid dial-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.fortezzaDial===v,img)).join('')}</div>`;
+ bindChoices(v=>state.fortezzaDial=v);
+}
+
+function renderFortezzaHands(){
+ const opts=[
+  ['Plata','Plata','Con luminiscencia',fortezzaHandsThumbs['Plata']],
+  ['Oro','Oro','Con luminiscencia',fortezzaHandsThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Con luminiscencia',fortezzaHandsThumbs['Oro rosa']],
+  ['Azul','Azul','Con luminiscencia',fortezzaHandsThumbs['Azul']],
+  ['Quadrante','Quadrante','Sin luminiscencia',fortezzaHandsThumbs['Quadrante']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige las agujas de tu SCORIA Fortezza</h2><p>Cuatro acabados con luminiscencia y una variante Quadrante sin luminiscencia, de lectura más clásica y limpia.</p></div></div>
+ <div class="choice-grid hands-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.fortezzaHands===v,img)).join('')}</div>`;
+ bindChoices(v=>state.fortezzaHands=v);
+}
+
+function renderFortezzaBracelet(){
+ const opts=[
+  ['Plata','Plata','Brazalete metálico',fortezzaBraceletThumbs['Plata']],
+  ['Oro','Oro','Brazalete metálico',fortezzaBraceletThumbs['Oro']],
+  ['Oro rosa','Oro rosa','Brazalete metálico',fortezzaBraceletThumbs['Oro rosa']],
+  ['Negro','Negro','Brazalete metálico',fortezzaBraceletThumbs['Negro']],
+  ['Silver Gold','Silver Gold','Brazalete bicolor · plata / oro',fortezzaBraceletThumbs['Silver Gold']],
+  ['Silver Rose Gold','Silver Rose Gold','Brazalete bicolor · plata / oro rosa',fortezzaBraceletThumbs['Silver Rose Gold']],
+  ['Cuero marrón','Cuero marrón','Correa de cuero · cierre de mariposa',fortezzaBraceletThumbs['Cuero marrón']],
+  ['Cuero negro','Cuero negro','Correa de cuero · cierre de mariposa',fortezzaBraceletThumbs['Cuero negro']]
+ ];
+ stage.innerHTML=`<div class="stage-head"><div><h2>Elige el brazalete o correa de tu SCORIA Fortezza</h2><p>Seis acabados metálicos y dos correas de cuero con cierre de mariposa.</p></div></div>
+ <div class="choice-grid bracelet-grid">${opts.map(([v,l,sub,img])=>mediaOption(v,l,sub,state.fortezzaBracelet===v,img)).join('')}</div>`;
+ bindChoices(v=>state.fortezzaBracelet=v);
+}
+
+function renderFortezzaSummary(){
+ const arch=models.find(x=>x[0]===state.architecture);
+ const rows=[
+  ['Arquitectura',arch?.[1]||'—'],
+  ['Caja',state.fortezzaCase||'—'],
+  ['Bisel',state.fortezzaBezel||'—'],
+  ['Esfera',state.fortezzaDial||'—'],
+  ['Agujas',state.fortezzaHands||'—'],
+  ['Brazalete / Correa',state.fortezzaBracelet||'—']
+ ];
+ const requestText=`SOLICITUD SCORIA CUSTOM
+Modelo: ${arch?.[1]||''}
+Caja: ${state.fortezzaCase||''}
+Bisel: ${state.fortezzaBezel||''}
+Esfera: ${state.fortezzaDial||''}
+Agujas: ${state.fortezzaHands||''}
+Brazalete / Correa: ${state.fortezzaBracelet||''}`;
+ const wa=`https://wa.me/34601436764?text=${encodeURIComponent('Hola, he configurado un reloj en SCORIA Custom y me gustaría consultarlo.\n\n'+requestText)}`;
+ const mail=`mailto:scoria.relojes@gmail.com?subject=${encodeURIComponent('Consulta SCORIA Custom · Fortezza')}&body=${encodeURIComponent('Hola SCORIA,\n\n'+requestText)}`;
+ stage.innerHTML=`<div class="stage-head"><div><h2>Tu SCORIA Fortezza</h2><p>Este es el resumen de tu configuración. SCORIA comprobará disponibilidad, compatibilidad, precio y plazo antes de confirmar la pieza.</p></div></div>
+ <div class="summary">${rows.map(([k,v])=>`<div class="summary-item"><small>${k}</small><b>${esc(v)}</b></div>`).join('')}</div>
+ <div class="contact-actions"><a href="${wa}" target="_blank" rel="noopener">Consultar por WhatsApp</a><a href="${mail}">Consultar por correo</a></div>`;
 }
 
 function renderAbissoCase(){
@@ -869,6 +1025,14 @@ function readyForNext(){
    if(step===5)return !!state.abissoBracelet;
    return true;
  }
+ if(state.architecture==='santos'){
+   if(step===1)return !!state.fortezzaCase;
+   if(step===2)return !!state.fortezzaBezel;
+   if(step===3)return !!state.fortezzaDial;
+   if(step===4)return !!state.fortezzaHands;
+   if(step===5)return !!state.fortezzaBracelet;
+   return true;
+ }
  if(state.architecture!=='gmt')return false;
  if(step===1)return !!state.caseColor;
  if(step===2)return !!state.bezel;
@@ -901,9 +1065,16 @@ function render(){
    else if(step===4)renderAbissoHands();
    else if(step===5)renderAbissoBracelet();
    else renderAbissoSummary();
+ } else if(state.architecture==='santos'){
+   if(step===1)renderFortezzaCase();
+   else if(step===2)renderFortezzaBezel();
+   else if(step===3)renderFortezzaDial();
+   else if(step===4)renderFortezzaHands();
+   else if(step===5)renderFortezzaBracelet();
+   else renderFortezzaSummary();
  } else if(state.architecture!=='gmt'){
    const arch=models.find(x=>x[0]===state.architecture);
-   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante, Cala y el SCORIA Abisso completo están activos.</div>`;
+   stage.innerHTML=`<div class="stage-head"><div><h2>${esc(arch?.[1]||'Arquitectura')}</h2><p>La estructura específica de esta arquitectura se definirá después.</p></div></div><div class="arch-warning">Meridian GMT, Quadrante, Cala, SCORIA Abisso y SCORIA Fortezza están completos.</div>`;
  } else if(step===1)renderCase();
  else if(step===2)renderBezel();
  else if(step===3)renderDial();
